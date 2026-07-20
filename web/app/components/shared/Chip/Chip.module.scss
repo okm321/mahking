@@ -1,0 +1,59 @@
+@use "../../../styles/mixins" as m;
+@use "../../../styles/variables" as v;
+
+.chip {
+  display: flex;
+  background-color: v.$green-50;
+  border: 2px solid v.$green-500;
+  padding: 4px 8px;
+  border-radius: 20px;
+  align-items: center;
+  @include m.text-style(s);
+  width: fit-content;
+  gap: 8px;
+  transition: background-color, box-shadow 0.2s;
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: v.$green-100;
+      border-color: v.$green-800;
+      box-shadow: 0 0 8px 0px v.$green-200;
+    }
+  }
+
+  &:has(.close_button:focus-visible) {
+    background-color: v.$green-100;
+    border-color: v.$green-800;
+    outline: none;
+    box-shadow: 0 0 8px 0px v.$green-200;
+  }
+
+  &-red {
+    background-color: v.$red-50;
+    border-color: v.$red-500;
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: v.$red-100;
+        border-color: v.$red-800;
+        box-shadow: 0 0 8px 0px v.$red-200;
+      }
+    }
+
+    &:has(.close_button:focus-visible) {
+      background-color: v.$red-100;
+      border-color: v.$red-800;
+      outline: none;
+      box-shadow: 0 0 8px 0px v.$red-200;
+    }
+  }
+}
+
+.text {
+  text-wrap: nowrap;
+}
+
+.close_button {
+  cursor: pointer;
+  outline: none;
+}

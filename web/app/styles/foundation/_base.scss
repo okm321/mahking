@@ -1,0 +1,58 @@
+@use "../variables" as v;
+@use "../mixins" as m;
+
+:root {
+  --space_base: 4px;
+  --color_primary: #{v.$mint-500};
+  --color_text-default: #{v.$gray-900};
+  --color_text-muted: #{v.$gray-600};
+  --color_text-subtle: #{v.$gray-500};
+  --color_icon-default: #{v.$gray-700};
+  --color_border-default: #{v.$gray-200};
+  --color_surface: #fff;
+  --color_button-cta: #{v.$green-700};
+  --color_bg-default: #{v.$mint-500};
+  --color_bg-main-wrapper: #{v.$yellow-200};
+  --color_bg-main: #{v.$yellow-50};
+  --color_input-outline: #{v.$green-800};
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  height: 100%;
+  background: var(--color_bg-default);
+  color: var(--color_text-default);
+  transition: background 0.3s;
+  @include m.text-style(m);
+  font-family: "M PLUS Rounded 1c", sans-serif;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color_input-outline);
+  outline-offset: 4px;
+}
+
+.visually-hidden {
+  width: 0.0625rem;
+  height: 0.0625rem;
+  margin: -0.0625rem;
+  padding: 0px;
+  position: absolute;
+  top: 0px;
+  inset-inline-start: 0px;
+  overflow: hidden;
+  clip: rect(0px, 0px, 0px, 0px);
+  border: 0px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+/* height: calc(100dvh - var(--keyboard-height, 0px)); */

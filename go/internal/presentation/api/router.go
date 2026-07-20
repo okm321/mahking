@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/okm321/mahking-go/pkg/logger"
+	"github.com/okm321/mahking/go/pkg/logger"
 )
 
 // Router is an alias to make dependency injection explicit.

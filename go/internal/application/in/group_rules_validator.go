@@ -4,7 +4,7 @@ package in
 import (
 	"errors"
 
-	"github.com/okm321/mahking-go/internal/domain"
+	"github.com/okm321/mahking/go/internal/domain"
 	"github.com/sivchari/govalid"
 	govaliderrors "github.com/sivchari/govalid/validation/errors"
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
 )
 
 type Game struct {

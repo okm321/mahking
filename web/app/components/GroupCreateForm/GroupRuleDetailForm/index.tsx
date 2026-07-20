@@ -1,0 +1,1 @@
+export { GroupRuleDetailForm } from "./GroupRuleDetailForm"

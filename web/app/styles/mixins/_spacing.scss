@@ -1,0 +1,3 @@
+@function space($multiplier) {
+  @return calc(var(--space_base) * #{$multiplier});
+}

@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/okm321/mahking-go/config"
-	"github.com/okm321/mahking-go/internal/application"
-	"github.com/okm321/mahking-go/internal/infrastructure/postgres"
-	"github.com/okm321/mahking-go/internal/presentation/api"
-	pkgpostgres "github.com/okm321/mahking-go/pkg/postgres"
+	"github.com/okm321/mahking/go/config"
+	"github.com/okm321/mahking/go/internal/application"
+	"github.com/okm321/mahking/go/internal/infrastructure/postgres"
+	"github.com/okm321/mahking/go/internal/presentation/api"
+	pkgpostgres "github.com/okm321/mahking/go/pkg/postgres"
 )
 
 // App wires all layers together and owns their lifecycle.

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/caarlos0/env/v11"
-	pkgpostgres "github.com/okm321/mahking-go/pkg/postgres"
+	pkgpostgres "github.com/okm321/mahking/go/pkg/postgres"
 )
 
 type Config struct {

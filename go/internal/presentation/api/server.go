@@ -9,9 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/okm321/mahking-go/config"
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
-	"github.com/okm321/mahking-go/pkg/logger"
+	"github.com/okm321/mahking/go/config"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
+	"github.com/okm321/mahking/go/pkg/logger"
 )
 
 func Run(cfg *config.Config, router Router) error {

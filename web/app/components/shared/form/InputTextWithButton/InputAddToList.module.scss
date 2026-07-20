@@ -1,0 +1,98 @@
+@use "sass:color";
+@use "../../../../styles/mixins" as m;
+@use "../../../../styles/variables" as v;
+
+.input_text_with_button {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+
+  &__small {
+    @include m.text-style(xs);
+
+    .input_text {
+      padding: 4px 8px;
+    }
+  }
+
+  &__medium {
+    @include m.text-style(m);
+
+    .input_text {
+      padding: 8px 8px;
+    }
+  }
+
+  &:has(.input_text:focus, .button:focus) {
+    box-shadow: 0 0 8px 0px v.$gray-400;
+    border-color: v.$gray-500;
+  }
+
+  &-error {
+    .input_text {
+      border-color: v.$red-500;
+      background-color: v.$red-50;
+    }
+
+    &:has(.input_text:focus, .button:focus) {
+      box-shadow: 0 0 8px 0px v.$red-300;
+      border-color: v.$red-500;
+    }
+
+    .button-disabled {
+      border-color: v.$red-500;
+    }
+  }
+
+  &-disabled {
+    color: v.$gray-300;
+    border-color: v.$gray-200;
+  }
+}
+
+.input_text {
+  outline: none;
+  border: 2px solid v.$gray-500;
+  border-radius: 4px 0 0 4px;
+  border-right: none;
+  background-color: v.$gray-50;
+  width: 100%;
+
+  &::placeholder {
+    color: v.$gray-400;
+  }
+}
+
+.button {
+  background-color: v.$green-500;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  text-wrap: nowrap;
+  padding: 0px 14px 0 18px;
+  outline: none;
+  transition: background-color, 0.2s;
+  border-right: 2px solid v.$green-500;
+
+  &:focus-visible {
+    background-color: v.$green-700;
+  }
+
+  &-disabled {
+    background-color: color.adjust(v.$gray-300, $alpha: -0.5);
+    color: color.adjust(v.$gray-500, $alpha: -0.5);
+    border: 2px solid v.$gray-500;
+    box-sizing: border-box;
+    border-left: none;
+    pointer-events: none;
+
+  }
+}
+
+.list {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}

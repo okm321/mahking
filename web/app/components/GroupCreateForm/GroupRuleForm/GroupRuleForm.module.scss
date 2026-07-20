@@ -1,0 +1,21 @@
+@use "../../../styles/mixins" as m;
+@use "../../../styles/variables" as v;
+
+.point_suffix {
+  margin-left: 8px;
+  align-self: flex-end;
+  width: 100%;
+
+  @include m.text-style(l);
+}
+
+.point_setting {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.point_form {
+  input {
+    max-width: 50px;
+  }
+}

@@ -1,0 +1,10 @@
+.DS_Store
+/node_modules/
+
+# TanStack Start
+/.output/
+/.nitro/
+/.tanstack/
+app/routeTree.gen.ts
+
+.biome

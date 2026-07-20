@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/okm321/mahking-go/config"
-	"github.com/okm321/mahking-go/internal/bootstrap"
-	"github.com/okm321/mahking-go/pkg/logger"
-	pkgtrace "github.com/okm321/mahking-go/pkg/trace"
+	"github.com/okm321/mahking/go/config"
+	"github.com/okm321/mahking/go/internal/bootstrap"
+	"github.com/okm321/mahking/go/pkg/logger"
+	pkgtrace "github.com/okm321/mahking/go/pkg/trace"
 )
 
 func main() {

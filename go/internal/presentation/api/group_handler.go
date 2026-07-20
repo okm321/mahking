@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/okm321/mahking-go/internal/application"
-	appin "github.com/okm321/mahking-go/internal/application/in"
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
+	"github.com/okm321/mahking/go/internal/application"
+	appin "github.com/okm321/mahking/go/internal/application/in"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
 )
 
 type groupHandler struct {

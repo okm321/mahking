@@ -3,11 +3,11 @@ package postgres
 import (
 	"context"
 
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/okm321/mahking-go/internal/domain"
-	"github.com/okm321/mahking-go/internal/infrastructure/postgres/sqlc"
+	"github.com/okm321/mahking/go/internal/domain"
+	"github.com/okm321/mahking/go/internal/infrastructure/postgres/sqlc"
 )
 
 type MemberRepository struct {

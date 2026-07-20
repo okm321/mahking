@@ -6,9 +6,9 @@ import (
 
 	"github.com/guregu/null/v6"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/okm321/mahking-go/internal/domain"
-	"github.com/okm321/mahking-go/internal/infrastructure/postgres/sqlc"
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
+	"github.com/okm321/mahking/go/internal/domain"
+	"github.com/okm321/mahking/go/internal/infrastructure/postgres/sqlc"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
 )
 
 type GroupRepository struct {

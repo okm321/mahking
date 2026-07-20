@@ -1,0 +1,19 @@
+@use "../../../../styles/mixins" as m;
+@use "../../../../styles/variables" as v;
+
+.chip {
+  @include m.text-style(xs);
+  border-radius: 4px;
+  padding: 0 4px;
+  height: fit-content;
+
+  &__required {
+    background: v.$red-100;
+    color: v.$red-700;
+  }
+
+  &__optional {
+    background: v.$blue-100;
+    color: v.$blue-500;
+  }
+}

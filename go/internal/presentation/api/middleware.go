@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/okm321/mahking-go/pkg/logger"
+	"github.com/okm321/mahking/go/pkg/logger"
 	"github.com/riandyrn/otelchi"
 )
 

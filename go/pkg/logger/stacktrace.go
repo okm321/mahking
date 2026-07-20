@@ -112,7 +112,7 @@ func getStackTrace(err error) stackTracer {
 
 // findCallerFrame pkg/errorパッケージのフレームをスキップして実際のエラー発火元を返す
 func findCallerFrame(frames pkgerrors.StackTrace) pkgerrors.Frame {
-	const errorPkg = "github.com/okm321/mahking-go/pkg/error"
+	const errorPkg = "github.com/okm321/mahking/go/pkg/error"
 	for _, f := range frames {
 		pc := uintptr(f) - 1
 		fn := runtime.FuncForPC(pc)

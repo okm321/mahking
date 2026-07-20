@@ -1,0 +1,30 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.main_wrapper {
+  width: 95%;
+  max-width: 500px;
+  margin: 0 auto calc(var(--space_base) * 2);
+  background: var(--color_bg-main-wrapper);
+  flex: 1 1 auto;
+  border-radius: calc(var(--space_base) * 4);
+  padding-right: calc(var(--space_base) * 2);
+  padding-bottom: calc(var(--space_base) * 2);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: calc(var(--space_base) * 0.5) calc(var(--space_base) * 1) calc(var(--space_base) * 1) 0 rgba(0, 0, 0, 0.25);
+}
+
+.main {
+  padding-top: calc(var(--space_base) * 3);
+  padding-bottom: calc(var(--space_base) * 3);
+  padding-left: calc(var(--space_base) * 4);
+  padding-right: calc(var(--space_base) * 3);
+  background: var(--color_bg-main);
+  flex: 1 1 auto;
+  height: 100%;
+  border-radius: 0 calc(var(--space_base) * 4) calc(var(--space_base) * 4) calc(var(--space_base) * 4);
+  overflow-y: auto;
+}

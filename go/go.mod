@@ -1,4 +1,4 @@
-module github.com/okm321/mahking-go
+module github.com/okm321/mahking/go
 
 go 1.26.0
 

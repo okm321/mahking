@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
-	"github.com/okm321/mahking-go/pkg/logger"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
+	"github.com/okm321/mahking/go/pkg/logger"
 	govaliderrors "github.com/sivchari/govalid/validation/errors"
 )
 

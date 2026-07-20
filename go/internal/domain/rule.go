@@ -2,7 +2,7 @@ package domain
 
 import (
 	"github.com/guregu/null/v6"
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
 )
 
 type Rule struct {

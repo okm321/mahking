@@ -3,7 +3,7 @@ package domain
 import (
 	"context"
 
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
 )
 
 type Member struct {

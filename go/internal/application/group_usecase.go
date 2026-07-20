@@ -3,11 +3,11 @@ package application
 import (
 	"context"
 
-	appin "github.com/okm321/mahking-go/internal/application/in"
-	appout "github.com/okm321/mahking-go/internal/application/out"
-	"github.com/okm321/mahking-go/internal/domain"
-	pkgerror "github.com/okm321/mahking-go/pkg/error"
-	pkgtrace "github.com/okm321/mahking-go/pkg/trace"
+	appin "github.com/okm321/mahking/go/internal/application/in"
+	appout "github.com/okm321/mahking/go/internal/application/out"
+	"github.com/okm321/mahking/go/internal/domain"
+	pkgerror "github.com/okm321/mahking/go/pkg/error"
+	pkgtrace "github.com/okm321/mahking/go/pkg/trace"
 )
 
 type GroupUsecase struct {

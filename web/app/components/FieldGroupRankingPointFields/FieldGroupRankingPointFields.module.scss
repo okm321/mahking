@@ -1,0 +1,19 @@
+@use "../../styles/mixins" as m;
+@use "../../styles/variables" as v;
+
+.ranking_points {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+
+  @container group-create-form (min-width: 401px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.point {
+  align-self: flex-end;
+  margin-left: 4px;
+
+  @include m.text-style(l);
+}

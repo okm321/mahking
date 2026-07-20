@@ -1,6 +1,6 @@
 package out
 
-import "github.com/okm321/mahking-go/internal/domain"
+import "github.com/okm321/mahking/go/internal/domain"
 
 // Group is a view model returned by usecases.
 type Group struct {

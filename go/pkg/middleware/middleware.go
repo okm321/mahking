@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/okm321/mahking-go/pkg/logger"
+	"github.com/okm321/mahking/go/pkg/logger"
 )
 
 func Recover() fiber.Handler {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/okm321/mahking-go/internal/domain"
+	"github.com/okm321/mahking/go/internal/domain"
 )
 
 type Transactioner struct {

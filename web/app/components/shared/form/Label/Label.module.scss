@@ -1,0 +1,10 @@
+@use "../../../../styles/mixins" as m;
+@use "../../../../styles/variables" as v;
+
+.label {
+  @include m.text-style(m);
+  font-weight: bold;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}

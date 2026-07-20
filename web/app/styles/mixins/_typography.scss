@@ -1,0 +1,40 @@
+@use "sass:map";
+
+// Typography システム
+$typography: (
+  xxxxl: (font-size: 48 * 0.0625rem,
+    line-height: 1.5,
+    letter-spacing: -0.02em),
+  xxxl: (font-size: 32 * 0.0625rem,
+    line-height: 1.8,
+    letter-spacing: -0.01em),
+  xxl: (font-size: 24 * 0.0625rem,
+    line-height: 1.7,
+    letter-spacing: -0.01em),
+  xl: (font-size: 20 * 0.0625rem,
+    line-height: 1.6,
+    letter-spacing: 0),
+  l: (font-size: 18 * 0.0625rem,
+    line-height: 1.6,
+    letter-spacing: 0),
+  m: (font-size: 16 * 0.0625rem,
+    line-height: 1.6,
+    letter-spacing: 0),
+  s: (font-size: 14 * 0.0625rem,
+    line-height: 1.6,
+    letter-spacing: 0),
+  xs: (font-size: 12 * 0.0625rem,
+    line-height: 1.6,
+    letter-spacing: 0.01em),
+  xxs: (font-size: 10 * 0.0625rem,
+    line-height: 1.6,
+    letter-spacing: 0.01em)
+);
+
+// 取得用のmixin
+@mixin text-style($size) {
+  $styles: map.get($typography, $size);
+  font-size: map.get($styles, font-size);
+  line-height: map.get($styles, line-height);
+  letter-spacing: map.get($styles, letter-spacing);
+}

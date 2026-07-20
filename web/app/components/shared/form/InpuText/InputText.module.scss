@@ -1,0 +1,50 @@
+@use "../../../../styles/mixins" as m;
+@use "../../../../styles/variables" as v;
+
+.input_text_wrapper {
+  display: inline-flex;
+  width: 100%;
+}
+
+.input_text {
+  border: 2px solid v.$gray-500;
+  border-radius: 4px;
+  outline: none;
+  transition: box-shadow 0.2s;
+  background-color: v.$gray-50;
+  width: 100%;
+
+  &__small {
+    @include m.text-style(xs);
+    padding: 4px 8px;
+  }
+
+  &__medium {
+    @include m.text-style(m);
+    padding: 8px 8px;
+  }
+
+  &::placeholder {
+    color: v.$gray-400;
+  }
+
+  &:focus {
+    box-shadow: 0 0 8px 0px v.$gray-400;
+    border-color: v.$gray-500;
+  }
+
+  &-error {
+    border-color: v.$red-500;
+    background-color: v.$red-50;
+
+    &:focus {
+      box-shadow: 0 0 8px 0px v.$red-300;
+      border-color: v.$red-500;
+    }
+  }
+
+  &-disabled {
+    color: v.$gray-300;
+    border-color: v.$gray-200;
+  }
+}

@@ -1,0 +1,9 @@
+@use "../../styles/mixins" as m;
+@use "../../styles/variables" as v;
+
+.fractional_calculation {
+  display: grid;
+  gap: 8px;
+  align-items: flex-start;
+  grid-template-columns: repeat(1, 1fr);
+}

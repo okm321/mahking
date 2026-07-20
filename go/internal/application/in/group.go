@@ -2,7 +2,7 @@ package in
 
 import (
 	"github.com/guregu/null/v6"
-	"github.com/okm321/mahking-go/internal/domain"
+	"github.com/okm321/mahking/go/internal/domain"
 )
 
 type CreateGroupWithRule struct {

@@ -1,0 +1,12 @@
+@use "../../../../styles/mixins" as m;
+@use "../../../../styles/variables" as v;
+
+.helper_text {
+  @include m.text-style(xs);
+  color: v.$gray-500;
+}
+
+.error_text {
+  @include m.text-style(s);
+  color: v.$red-500;
+}
