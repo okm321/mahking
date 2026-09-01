@@ -3,21 +3,20 @@ package bootstrap
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/okm321/mahking/go/config"
 	"github.com/okm321/mahking/go/internal/application"
 	"github.com/okm321/mahking/go/internal/infrastructure/postgres"
-	"github.com/okm321/mahking/go/internal/presentation/api"
+	"github.com/okm321/mahking/go/internal/presentation/rpc"
 	pkgpostgres "github.com/okm321/mahking/go/pkg/postgres"
 )
 
-// App wires all layers together and owns their lifecycle.
 type App struct {
-	cfg    *config.Config
-	router api.Router
-
-	pool *pgxpool.Pool
+	cfg     *config.Config
+	handler http.Handler
+	pool    *pgxpool.Pool
 }
 
 // NewApp creates all dependencies and returns a runnable App.
@@ -37,23 +36,16 @@ func NewApp(ctx context.Context, cfg *config.Config) (*App, error) {
 	})
 
 	// Handler
-	groupHandler := api.NewGroupHandler(groupUsecase)
-
-	// Router
-	router := api.NewRouter(api.HandlerSet{
-		Group: groupHandler,
+	handler := rpc.NewHandler(rpc.ServerSet{
+		Group: rpc.NewGroupServer(groupUsecase),
 	})
 
-	return &App{
-		cfg:    cfg,
-		router: router,
-		pool:   pool,
-	}, nil
+	return &App{cfg: cfg, handler: handler, pool: pool}, nil
 }
 
-// Run starts the HTTP server. It blocks until shutdown.
+// Run starts the RPC server. It blocks until shutdown.
 func (a *App) Run() error {
-	return api.Run(a.cfg, a.router)
+	return rpc.Run(a.cfg, a.handler)
 }
 
 // Close releases resources.

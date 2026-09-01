@@ -14,14 +14,14 @@ import (
 // DB configuration
 type DB struct {
 	Host     string `env:"PG_HOST" envDefault:"127.0.0.1"`
-	Port     string `env:"PG_PORT" envDefault:"5432"`
+	Port     string `env:"PG_PORT" envDefault:"15432"`
 	User     string `env:"PG_USER" envDefault:"postgres"`
 	Password string `env:"PG_PASS" envDefault:"password"` //nolint:gosec // env var name, not a hardcoded credential
 	DbName   string `env:"PG_DBNAME" envDefault:"postgres"`
 	Schema   string `env:"PG_SCHEMA" envDefault:"mahking_local"`
 	Params   string `env:"PG_PARAMS" envDefault:"sslmode=disable timezone=Asia/Tokyo lock_timeout=50000"`
-	MinConns int32 `env:"MIN_CONNS" envDefault:"2"`
-	MaxConns int32 `env:"MAX_CONNS" envDefault:"10"`
+	MinConns int32  `env:"MIN_CONNS" envDefault:"2"`
+	MaxConns int32  `env:"MAX_CONNS" envDefault:"10"`
 }
 
 // Connect 新しいプールを作成（シングルトン管理なし）
