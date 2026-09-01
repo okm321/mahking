@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/guregu/null/v6"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/okm321/mahking/go/internal/domain"
 	"github.com/okm321/mahking/go/internal/infrastructure/postgres/sqlc"
@@ -31,11 +33,27 @@ func (r *GroupRepository) List(ctx context.Context) ([]domain.Group, error) {
 	for _, row := range rows {
 		groups = append(groups, domain.Group{
 			ID:   row.ID,
-			UID:  row.Uid.String(),
+			UID:  row.Uid,
 			Name: row.Name,
 		})
 	}
 	return groups, nil
+}
+
+func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (*domain.Group, error) {
+	row, err := r.q.GetGroupByID(ctx, uid)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, pkgerror.ErrNotFound
+		}
+		return nil, pkgerror.Wrap(err, "get group by uid")
+	}
+
+	return &domain.Group{
+		ID:   row.ID,
+		UID:  row.Uid,
+		Name: row.Name,
+	}, nil
 }
 
 func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*domain.Group, error) {
@@ -53,7 +71,7 @@ func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*dom
 
 	return &domain.Group{
 		ID:   row.ID,
-		UID:  row.Uid.String(),
+		UID:  row.Uid,
 		Name: row.Name,
 	}, nil
 }
@@ -73,12 +91,12 @@ func (r *GroupRepository) createRelatedInfo(ctx context.Context, group *domain.G
 
 	ruleParam := sqlc.CreateRuleParams{
 		GroupID:               group.ID,
-		MahjongType:           int32(group.Rule.MahjongType),           //nolint:gosec // 麻雀タイプは1-2の範囲
-		InitialPoints:         int32(group.Rule.InitialPoints),         //nolint:gosec // 点数はint32範囲内
-		ReturnPoints:          int32(group.Rule.ReturnPoints),          //nolint:gosec // 点数はint32範囲内
-		RankingPointsFirst:    int32(group.Rule.RankingPointsFirst),    //nolint:gosec // 点数はint32範囲内
-		RankingPointsSecond:   int32(group.Rule.RankingPointsSecond),   //nolint:gosec // 点数はint32範囲内
-		RankingPointsThird:    int32(group.Rule.RankingPointsThird),    //nolint:gosec // 点数はint32範囲内
+		MahjongType:           int32(group.Rule.MahjongType),         //nolint:gosec // 麻雀タイプは1-2の範囲
+		InitialPoints:         int32(group.Rule.InitialPoints),       //nolint:gosec // 点数はint32範囲内
+		ReturnPoints:          int32(group.Rule.ReturnPoints),        //nolint:gosec // 点数はint32範囲内
+		RankingPointsFirst:    int32(group.Rule.RankingPointsFirst),  //nolint:gosec // 点数はint32範囲内
+		RankingPointsSecond:   int32(group.Rule.RankingPointsSecond), //nolint:gosec // 点数はint32範囲内
+		RankingPointsThird:    int32(group.Rule.RankingPointsThird),  //nolint:gosec // 点数はint32範囲内
 		RankingPointsFourth:   null.IntFromPtr(group.Rule.RankingPointsFour.Ptr()),
 		FractionalCalculation: int32(group.Rule.FractionalCalculation), //nolint:gosec // 計算方法は1-5の範囲
 		UseBust:               group.Rule.UseBust,

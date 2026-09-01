@@ -42,6 +42,19 @@ func (u *GroupUsecase) List(ctx context.Context) (res []appout.Group, err error)
 	return res, nil
 }
 
+func (u *GroupUsecase) Get(ctx context.Context, uid string) (res *appout.Group, err error) {
+	ctx = pkgtrace.StartSpan(ctx, "GroupUsecase.Get")
+	defer func() { pkgtrace.EndSpan(ctx, err) }()
+
+	group, err := u.groupRepo.GetByUUID(ctx, uid)
+	if err != nil {
+		return nil, err
+	}
+
+	out := appout.NewGroup(*group)
+	return &out, nil
+}
+
 func (u *GroupUsecase) Create(ctx context.Context, in appin.CreateGroupWithRule) (res *appout.Group, err error) {
 	ctx = pkgtrace.StartSpan(ctx, "GroupUsecase.Create")
 	defer func() { pkgtrace.EndSpan(ctx, err) }()

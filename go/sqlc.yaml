@@ -26,6 +26,8 @@ sql:
               import: "github.com/guregu/null/v6"
               type: "String"
             nullable: true
+          - db_type: "uuid"
+            go_type: "string"
 plugins: []
 rules: []
 options: {}

@@ -13,3 +13,15 @@ ORDER BY id;
 INSERT INTO groups (name)
 VALUES (@name)
 RETURNING id, uid, name, created_at, updated_at;
+
+-- name: GetGroupByID :one
+SELECT
+  id,
+  uid,
+  name,
+  created_at,
+  updated_at
+FROM
+  groups
+WHERE
+  uid = @uid;

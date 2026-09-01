@@ -64,5 +64,6 @@ func (g *Group) validateRules() error {
 // GroupRepository 永続化層のインタフェース
 type GroupRepository interface {
 	List(ctx context.Context) ([]Group, error)
+	GetByUUID(ctx context.Context, uid string) (*Group, error)
 	Create(ctx context.Context, group *Group) (*Group, error)
 }

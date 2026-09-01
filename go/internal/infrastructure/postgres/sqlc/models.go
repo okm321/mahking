@@ -24,9 +24,73 @@ type AtlasSchemaRevision struct {
 	OperatorVersion string             `json:"operator_version"`
 }
 
+type Game struct {
+	ID      int64 `json:"id"`
+	GroupID int64 `json:"group_id"`
+	// 対局メモ
+	Note pgtype.Text `json:"note"`
+	// 対局日時
+	PlayedAt  pgtype.Timestamptz `json:"played_at"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+}
+
+type GameRule struct {
+	ID      int64 `json:"id"`
+	GameID  int64 `json:"game_id"`
+	GroupID int64 `json:"group_id"`
+	// 1: 三麻, 2: 四麻
+	MahjongType int32 `json:"mahjong_type"`
+	// 持ち点 (単位: 千点)
+	InitialPoints int32 `json:"initial_points"`
+	// 返し点 (単位: 千点)
+	ReturnPoints int32 `json:"return_points"`
+	// 1位のウマ
+	RankingPointsFirst int32 `json:"ranking_points_first"`
+	// 2位のウマ
+	RankingPointsSecond int32 `json:"ranking_points_second"`
+	// 3位のウマ
+	RankingPointsThird int32 `json:"ranking_points_third"`
+	// 4位のウマ
+	RankingPointsFourth null.Int `json:"ranking_points_fourth"`
+	// 1: 切り上げ, 2: 切り捨て, 3: 四捨五入, 4: 10点未満切り上げ, 5: 10点未満切り捨て
+	FractionalCalculation int32 `json:"fractional_calculation"`
+	// 飛び設定
+	UseBust bool `json:"use_bust"`
+	// 飛び賞のポイント
+	BustPoint null.Int `json:"bust_point"`
+	// チップ設定
+	UseChip bool `json:"use_chip"`
+	// チップのポイント
+	ChipPoint null.Int           `json:"chip_point"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+}
+
+type GameScore struct {
+	ID       int64 `json:"id"`
+	GameID   int64 `json:"game_id"`
+	GroupID  int64 `json:"group_id"`
+	MemberID int64 `json:"member_id"`
+	// 1: 東, 2: 南, 3: 西, 4: 北
+	Seat int32 `json:"seat"`
+	// 順位
+	Ranking int32 `json:"ranking"`
+	// 素点 (100点単位, 例: 32400)
+	RawScore int32 `json:"raw_score"`
+	// 計算後のポイント
+	Point pgtype.Numeric `json:"point"`
+	// チップ枚数
+	ChipCount null.Int `json:"chip_count"`
+	// 飛びフラグ
+	IsBusted  bool               `json:"is_busted"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+}
+
 type Group struct {
 	ID        int64              `json:"id"`
-	Uid       pgtype.UUID        `json:"uid"`
+	Uid       string             `json:"uid"`
 	Name      string             `json:"name"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
