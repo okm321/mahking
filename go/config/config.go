@@ -10,7 +10,6 @@ import (
 
 type Config struct {
 	Server     Server
-	GCP        GCP
 	Telemetry  Telemetry
 	DBPostgres pkgpostgres.DB
 }
@@ -32,13 +31,6 @@ type Server struct {
 	WriteTimeout    time.Duration `env:"WRITE_TIMEOUT"`
 	IdleTimeout     time.Duration `env:"IDLE_TIMEOUT"`
 	ShutdownTimeout time.Duration `env:"SHUTDOWN_TIMEOUT"`
-}
-
-// GCP configurations.
-type GCP struct {
-	ProjectID                       string `envconfig:"GCP_PROJECT_ID" default:"mahking-dev"`
-	HTTPLBSourceIP                  string `envconfig:"LITE_CORE_GCP_HTTP_LB_SOURCE_IP"`
-	BatchInvokerServiceAccountEmail string `envconfig:"LITE_CORE_GCP_BATCH_INVOKER_SERVICE_ACCOUNT_EMAIL" default:"cloud-run-service-invoker-dev@casting-one-dev.iam.gserviceaccount.com"`
 }
 
 var (

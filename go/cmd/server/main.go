@@ -13,14 +13,13 @@ import (
 func main() {
 	ctx := context.Background()
 	cnf := config.Get()
-	logger.Init(cnf.GCP.ProjectID, cnf.Server.Debug)
+	logger.Init(cnf.Server.Debug)
 
 	traceShutdown, err := pkgtrace.Init(ctx, pkgtrace.Config{
 		ServiceName:    cnf.Telemetry.ServiceName,
 		ServiceVersion: cnf.Telemetry.ServiceVersion,
 		Environment:    cnf.Telemetry.Environment,
 		SampleRate:     cnf.Telemetry.SampleRate,
-		ProjectID:      cnf.GCP.ProjectID,
 		Debug:          cnf.Server.Debug,
 	})
 	if err != nil {

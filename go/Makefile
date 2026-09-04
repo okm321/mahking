@@ -1,13 +1,4 @@
-ENV         ?= dev
-GCP_PROJECT := mahking-$(ENV)
-REGION      := asia-northeast1
-SERVICE     := mahking-$(ENV)-api
-REGISTRY    := $(REGION)-docker.pkg.dev/$(GCP_PROJECT)/mahking-$(ENV)
-IMAGE       := $(REGISTRY)/api
-GIT_SHA     := $(shell git rev-parse --short HEAD)
-TAG         := $(IMAGE):$(GIT_SHA)
-
-.PHONY: govalid sqlc vet lint con-local-db docker-login build deploy release
+.PHONY: govalid sqlc vet lint con-local-db
 
 govalid: ## govalid のバリデーター生成
 	go tool govalid ./...
@@ -24,17 +15,3 @@ lint: ## golangci-lint 実行
 con-local-db: ## ローカルDBにpgcliで接続
 	pgcli postgresql://postgres:password@127.0.0.1:15432/postgres
 
-docker-login: ## Artifact Registry へログイン
-	gcloud auth configure-docker $(REGION)-docker.pkg.dev --quiet
-
-build: docker-login ## イメージビルド & push
-	docker build -t $(TAG) .
-	docker push $(TAG)
-
-deploy: ## Cloud Run へデプロイ
-	gcloud run deploy $(SERVICE) \
-		--project $(GCP_PROJECT) \
-		--region $(REGION) \
-		--image $(TAG)
-
-release: build deploy ## ビルド + デプロイ

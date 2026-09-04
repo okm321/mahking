@@ -14,14 +14,10 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-var (
-	defaultLogger *slog.Logger
-	projectID     string
-)
+var defaultLogger *slog.Logger
 
 // Init ロガーの初期化
-func Init(pid string, debug bool) {
-	projectID = pid
+func Init(debug bool) {
 	SetDebug(debug)
 }
 
@@ -71,10 +67,8 @@ func traceAttrs(ctx context.Context) []slog.Attr {
 	}
 
 	return []slog.Attr{
-		slog.String("logging.googleapis.com/trace",
-			fmt.Sprintf("projects/%s/traces/%s", projectID, sc.TraceID().String())),
-		slog.String("logging.googleapis.com/spanId", sc.SpanID().String()),
-		slog.Bool("logging.googleapis.com/trace_sampled", sc.IsSampled()),
+		slog.String("trace_id", sc.TraceID().String()),
+		slog.String("span_id", sc.SpanID().String()),
 	}
 }
 

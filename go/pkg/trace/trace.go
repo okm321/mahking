@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -20,7 +19,6 @@ type Config struct {
 	ServiceVersion string
 	Environment    string
 	SampleRate     float64
-	ProjectID      string
 	Debug          bool
 }
 
@@ -47,14 +45,6 @@ func Init(ctx context.Context, cfg Config) (shutdown func(context.Context) error
 		)),
 	}
 
-	if !cfg.Debug {
-		exporter, err := newExporter(cfg)
-		if err != nil {
-			return nil, fmt.Errorf("create exporter: %w", err)
-		}
-		opts = append(opts, sdktrace.WithBatcher(exporter))
-	}
-
 	tp := sdktrace.NewTracerProvider(opts...)
 
 	otel.SetTracerProvider(tp)
@@ -64,10 +54,6 @@ func Init(ctx context.Context, cfg Config) (shutdown func(context.Context) error
 	))
 
 	return tp.Shutdown, nil
-}
-
-func newExporter(cfg Config) (sdktrace.SpanExporter, error) {
-	return texporter.New(texporter.WithProjectID(cfg.ProjectID))
 }
 
 // StartSpan 新しいSpanを作成し、contextに埋め込んで返す
