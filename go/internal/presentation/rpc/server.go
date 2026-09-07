@@ -21,6 +21,9 @@ type ServerSet struct {
 func NewHandler(servers ServerSet) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle(groupv1connect.NewGroupServiceHandler(servers.Group))
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
 
 	return mux
 }
