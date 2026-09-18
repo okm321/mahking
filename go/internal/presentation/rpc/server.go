@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"connectrpc.com/connect"
 	"github.com/okm321/mahking/go/config"
 	"github.com/okm321/mahking/go/internal/presentation/rpc/gen/mahking/group/v1/groupv1connect"
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
@@ -20,12 +21,14 @@ type ServerSet struct {
 
 func NewHandler(servers ServerSet) http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle(groupv1connect.NewGroupServiceHandler(servers.Group))
+	interceptors := connect.WithInterceptors(errorInterceptor())
+
+	mux.Handle(groupv1connect.NewGroupServiceHandler(servers.Group, interceptors))
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	return mux
+	return traceContextMiddleware(mux)
 }
 
 func Run(cfg *config.Config, handler http.Handler) error {

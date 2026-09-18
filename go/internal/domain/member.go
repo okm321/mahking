@@ -20,10 +20,10 @@ const MaxMemberNameLength = 10
 
 func (a NewMemberArgs) validate() error {
 	if a.Name == "" {
-		return pkgerror.NewError("名前は必須です")
+		return pkgerror.NewClientError("名前は必須です")
 	}
 	if len(a.Name) > MaxMemberNameLength {
-		return pkgerror.NewErrorf("名前は%d文字以内で入力してください: %s", MaxMemberNameLength, a.Name)
+		return pkgerror.NewClientErrorf("名前は%d文字以内で入力してください: %s", MaxMemberNameLength, a.Name)
 	}
 	return nil
 }

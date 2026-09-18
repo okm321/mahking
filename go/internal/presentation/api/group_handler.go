@@ -32,7 +32,7 @@ func (h *groupHandler) List(w http.ResponseWriter, r *http.Request) error {
 func (h *groupHandler) Create(w http.ResponseWriter, r *http.Request) error {
 	var input appin.CreateGroupWithRule
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		return pkgerror.NewError("invalid json body")
+		return pkgerror.NewClientError("invalid json body")
 	}
 	group, err := h.usecase.Create(r.Context(), input)
 	if err != nil {

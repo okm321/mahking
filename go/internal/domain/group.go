@@ -50,7 +50,7 @@ func NewGroup(args NewGroupArgs) (_ *Group, err error) {
 
 func (g *Group) validateRules() error {
 	if g.Rule.MahjongType.RequiredMemberCount() > len(g.Members) {
-		return pkgerror.NewErrorf(
+		return pkgerror.NewClientErrorf(
 			"%sは最低%d人のメンバーが必要です。 人数: %d人",
 			g.Rule.MahjongType.String(),
 			g.Rule.MahjongType.RequiredMemberCount(),

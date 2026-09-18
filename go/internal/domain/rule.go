@@ -80,7 +80,7 @@ func (r *Rule) validateRules() error {
 	switch r.MahjongType {
 	case MahjongTypeThree:
 		if r.RankingPointsFirst+r.RankingPointsSecond+r.RankingPointsThird != 0 {
-			return pkgerror.NewErrorf(
+			return pkgerror.NewClientErrorf(
 				"ウマの合計は0である必要があります: 1位: %d, 2位: %d, 3位: %d, 合計: %d",
 				r.RankingPointsFirst,
 				r.RankingPointsSecond,
@@ -90,11 +90,11 @@ func (r *Rule) validateRules() error {
 		}
 	case MahjongTypeFour:
 		if !r.RankingPointsFour.Valid {
-			return pkgerror.NewErrorf("四位のウマは必須です")
+			return pkgerror.NewClientErrorf("四位のウマは必須です")
 		}
 
 		if r.RankingPointsFirst+r.RankingPointsSecond+r.RankingPointsThird+int(r.RankingPointsFour.Int64) != 0 {
-			return pkgerror.NewErrorf(
+			return pkgerror.NewClientErrorf(
 				"ウマの合計は0である必要があります: 1位: %d, 2位: %d, 3位: %d, 4位: %d, 合計: %d",
 				r.RankingPointsFirst,
 				r.RankingPointsSecond,
@@ -106,18 +106,18 @@ func (r *Rule) validateRules() error {
 	}
 
 	if !r.FractionalCalculation.IsDecimal() && !r.FractionalRecipient.IsValid() {
-		return pkgerror.NewErrorf("端数を受け取る人は必須です")
+		return pkgerror.NewClientErrorf("端数を受け取る人は必須です")
 	}
 	if r.FractionalCalculation.IsDecimal() && r.FractionalRecipient.IsValid() {
-		return pkgerror.NewErrorf("小数点有効の場合、端数を受け取る人は指定できません")
+		return pkgerror.NewClientErrorf("小数点有効の場合、端数を受け取る人は指定できません")
 	}
 
 	if r.UseBust && !r.BustPoint.Valid {
-		return pkgerror.NewErrorf("飛び賞のポイントは必須です")
+		return pkgerror.NewClientErrorf("飛び賞のポイントは必須です")
 	}
 
 	if r.UseChip && !r.ChipPoint.Valid {
-		return pkgerror.NewErrorf("チップのポイントは必須です")
+		return pkgerror.NewClientErrorf("チップのポイントは必須です")
 	}
 
 	return nil

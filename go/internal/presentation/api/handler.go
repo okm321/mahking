@@ -43,7 +43,7 @@ func handleError(w http.ResponseWriter, r *http.Request, err error) {
 		return
 	}
 
-	var pkgErr *pkgerror.Error
+	var pkgErr *pkgerror.ClientError
 	if errors.As(err, &pkgErr) {
 		logger.WarnContext(ctx, err.Error(), "error", err)
 		writeJSON(w, http.StatusBadRequest, pkgErr)

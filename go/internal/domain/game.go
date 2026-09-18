@@ -58,7 +58,7 @@ func NewGame(groupID int64, args NewGameArgs) (*Game, error) {
 func (g *Game) validateRules() error {
 	requiredCount := g.GameRule.MahjongType.RequiredMemberCount()
 	if len(g.GameScores) != requiredCount {
-		return pkgerror.NewErrorf(
+		return pkgerror.NewClientErrorf(
 			"%sのスコア数は%d人分必要です: %d人分",
 			g.GameRule.MahjongType.String(),
 			requiredCount,
@@ -71,33 +71,33 @@ func (g *Game) validateRules() error {
 	rankingMap := make(map[int]bool)
 	for _, score := range g.GameScores {
 		if seatMap[score.Seat] {
-			return pkgerror.NewErrorf("席が重複しています: %s", score.Seat)
+			return pkgerror.NewClientErrorf("席が重複しています: %s", score.Seat)
 		}
 		seatMap[score.Seat] = true
 
 		if memberIDMap[score.MemberID] {
-			return pkgerror.NewErrorf("メンバーが重複しています: メンバーID %d", score.MemberID)
+			return pkgerror.NewClientErrorf("メンバーが重複しています: メンバーID %d", score.MemberID)
 		}
 		memberIDMap[score.MemberID] = true
 
 		if rankingMap[score.Ranking] {
-			return pkgerror.NewErrorf("順位が重複しています: %d位", score.Ranking)
+			return pkgerror.NewClientErrorf("順位が重複しています: %d位", score.Ranking)
 		}
 		rankingMap[score.Ranking] = true
 
 		if score.Ranking < 1 || score.Ranking > len(g.GameScores) {
-			return pkgerror.NewErrorf("順位は1〜%dの範囲で指定してください: %d", len(g.GameScores), score.Ranking)
+			return pkgerror.NewClientErrorf("順位は1〜%dの範囲で指定してください: %d", len(g.GameScores), score.Ranking)
 		}
 
 		if g.GameRule.UseChip && !score.ChipCount.Valid {
-			return pkgerror.NewErrorf("チップ枚数は必須です: メンバーID %d", score.MemberID)
+			return pkgerror.NewClientErrorf("チップ枚数は必須です: メンバーID %d", score.MemberID)
 		}
 		if !g.GameRule.UseChip && score.ChipCount.Valid {
-			return pkgerror.NewErrorf("チップ設定が無効な場合、チップ枚数は指定できません: メンバーID %d", score.MemberID)
+			return pkgerror.NewClientErrorf("チップ設定が無効な場合、チップ枚数は指定できません: メンバーID %d", score.MemberID)
 		}
 
 		if !g.GameRule.UseBust && score.IsBusted {
-			return pkgerror.NewErrorf("飛び設定が無効な場合、飛びフラグは指定できません: メンバーID %d", score.MemberID)
+			return pkgerror.NewClientErrorf("飛び設定が無効な場合、飛びフラグは指定できません: メンバーID %d", score.MemberID)
 		}
 	}
 

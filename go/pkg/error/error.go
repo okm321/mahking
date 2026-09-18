@@ -1,42 +1,36 @@
 package error
 
 import (
-	"context"
 	"fmt"
 
 	pkgerrors "github.com/pkg/errors"
 )
 
-type Error struct {
-	Description string `json:"message"`
-	Reason      string `json:"reason,omitzero"`
+type ClientError struct {
+	Description string
+	Reason      string
 }
 
-// ErrorResponse はHTTPエラーレスポンス用の構造体
-type ErrorResponse struct {
-	Message string `json:"message"`
-	Reason  string `json:"reason,omitzero"`
-}
-
-func (e *Error) Error() string {
+func (e *ClientError) Error() string {
 	return e.Description
 }
 
-func NewError(desc string) error {
-	err := &Error{
+func NewClientError(desc string) error {
+	err := &ClientError{
 		Description: desc,
 	}
 	return WithStack(err)
 }
 
-func NewErrorf(desc string, a ...any) error {
-	err := &Error{
+func NewClientErrorf(desc string, a ...any) error {
+	err := &ClientError{
 		Description: fmt.Sprintf(desc, a...),
 	}
 	return WithStack(err)
 }
 
-type ErrorNotFound Error
+// ErrorNotFound は interceptor でハンドリングされ、CodeNotFound を返します。
+type ErrorNotFound ClientError
 
 func NewErrorNotFound(desc string, code ErrCode) error {
 	err := &ErrorNotFound{
@@ -50,14 +44,15 @@ func (e *ErrorNotFound) Error() string {
 	return e.Description
 }
 
-var ErrNotFound = NewErrorNotFound("存在しないデータです", ErrCodeNotFound)
+var ErrNotFound error = &ErrorNotFound{
+	Description: "存在しないデータです",
+	Reason:      string(ErrCodeNotFound),
+}
 
-func WrapFn(ctx context.Context, target error, fn func(ctx context.Context) error) error {
-	err := fn(ctx)
-	if err != nil {
-		return Errorf("%w: %w", err, target)
-	}
-	return nil
+// ErrorResponse はHTTPエラーレスポンス用の構造体
+type ErrorResponse struct {
+	Message string `json:"message"`
+	Reason  string `json:"reason,omitzero"`
 }
 
 ////////////////////////////////////////////////////////////////
