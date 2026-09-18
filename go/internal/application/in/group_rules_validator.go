@@ -10,130 +10,130 @@ import (
 )
 
 var (
-	// ErrNilrules is returned when the rules is nil.
-	ErrNilrules = errors.New("input rules is nil")
+	// ErrNilRules is returned when the Rules is nil.
+	ErrNilRules = errors.New("input Rules is nil")
 
-	// ErrrulesMahjongTypeEnumValidation is the error returned when the value is not in the allowed enum values domain.MahjongTypeThree, domain.MahjongTypeFour.
-	ErrrulesMahjongTypeEnumValidation = govaliderrors.ValidationError{Reason: "field MahjongType must be one of domain.MahjongTypeThree, domain.MahjongTypeFour", Path: "rules.MahjongType", Type: "enum"}
+	// ErrRulesMahjongTypeEnumValidation is the error returned when the value is not in the allowed enum values domain.MahjongTypeThree, domain.MahjongTypeFour.
+	ErrRulesMahjongTypeEnumValidation = govaliderrors.ValidationError{Reason: "field MahjongType must be one of domain.MahjongTypeThree, domain.MahjongTypeFour", Path: "Rules.MahjongType", Type: "enum"}
 
-	// ErrrulesMahjongTypeRequiredValidation is returned when the MahjongType is required but not provided.
-	ErrrulesMahjongTypeRequiredValidation = govaliderrors.ValidationError{Reason: "field MahjongType is required", Path: "rules.MahjongType", Type: "required"}
+	// ErrRulesMahjongTypeRequiredValidation is returned when the MahjongType is required but not provided.
+	ErrRulesMahjongTypeRequiredValidation = govaliderrors.ValidationError{Reason: "field MahjongType is required", Path: "Rules.MahjongType", Type: "required"}
 
-	// ErrrulesInitialPointsGTEValidation is the error returned when the value of the field is less than 1.
-	ErrrulesInitialPointsGTEValidation = govaliderrors.ValidationError{Reason: "field InitialPoints must be greater than or equal to 1", Path: "rules.InitialPoints", Type: "gte"}
+	// ErrRulesInitialPointsGTEValidation is the error returned when the value of the field is less than 1.
+	ErrRulesInitialPointsGTEValidation = govaliderrors.ValidationError{Reason: "field InitialPoints must be greater than or equal to 1", Path: "Rules.InitialPoints", Type: "gte"}
 
-	// ErrrulesInitialPointsRequiredValidation is returned when the InitialPoints is required but not provided.
-	ErrrulesInitialPointsRequiredValidation = govaliderrors.ValidationError{Reason: "field InitialPoints is required", Path: "rules.InitialPoints", Type: "required"}
+	// ErrRulesInitialPointsRequiredValidation is returned when the InitialPoints is required but not provided.
+	ErrRulesInitialPointsRequiredValidation = govaliderrors.ValidationError{Reason: "field InitialPoints is required", Path: "Rules.InitialPoints", Type: "required"}
 
-	// ErrrulesReturnPointsGTEValidation is the error returned when the value of the field is less than 1.
-	ErrrulesReturnPointsGTEValidation = govaliderrors.ValidationError{Reason: "field ReturnPoints must be greater than or equal to 1", Path: "rules.ReturnPoints", Type: "gte"}
+	// ErrRulesReturnPointsGTEValidation is the error returned when the value of the field is less than 1.
+	ErrRulesReturnPointsGTEValidation = govaliderrors.ValidationError{Reason: "field ReturnPoints must be greater than or equal to 1", Path: "Rules.ReturnPoints", Type: "gte"}
 
-	// ErrrulesReturnPointsRequiredValidation is returned when the ReturnPoints is required but not provided.
-	ErrrulesReturnPointsRequiredValidation = govaliderrors.ValidationError{Reason: "field ReturnPoints is required", Path: "rules.ReturnPoints", Type: "required"}
+	// ErrRulesReturnPointsRequiredValidation is returned when the ReturnPoints is required but not provided.
+	ErrRulesReturnPointsRequiredValidation = govaliderrors.ValidationError{Reason: "field ReturnPoints is required", Path: "Rules.ReturnPoints", Type: "required"}
 
-	// ErrrulesRankingPointsFirstRequiredValidation is returned when the RankingPointsFirst is required but not provided.
-	ErrrulesRankingPointsFirstRequiredValidation = govaliderrors.ValidationError{Reason: "field RankingPointsFirst is required", Path: "rules.RankingPointsFirst", Type: "required"}
+	// ErrRulesRankingPointsFirstRequiredValidation is returned when the RankingPointsFirst is required but not provided.
+	ErrRulesRankingPointsFirstRequiredValidation = govaliderrors.ValidationError{Reason: "field RankingPointsFirst is required", Path: "Rules.RankingPointsFirst", Type: "required"}
 
-	// ErrrulesRankingPointsSecondRequiredValidation is returned when the RankingPointsSecond is required but not provided.
-	ErrrulesRankingPointsSecondRequiredValidation = govaliderrors.ValidationError{Reason: "field RankingPointsSecond is required", Path: "rules.RankingPointsSecond", Type: "required"}
+	// ErrRulesRankingPointsSecondRequiredValidation is returned when the RankingPointsSecond is required but not provided.
+	ErrRulesRankingPointsSecondRequiredValidation = govaliderrors.ValidationError{Reason: "field RankingPointsSecond is required", Path: "Rules.RankingPointsSecond", Type: "required"}
 
-	// ErrrulesRankingPointsThirdRequiredValidation is returned when the RankingPointsThird is required but not provided.
-	ErrrulesRankingPointsThirdRequiredValidation = govaliderrors.ValidationError{Reason: "field RankingPointsThird is required", Path: "rules.RankingPointsThird", Type: "required"}
+	// ErrRulesRankingPointsThirdRequiredValidation is returned when the RankingPointsThird is required but not provided.
+	ErrRulesRankingPointsThirdRequiredValidation = govaliderrors.ValidationError{Reason: "field RankingPointsThird is required", Path: "Rules.RankingPointsThird", Type: "required"}
 
-	// ErrrulesRankingPointsFourCELValidation is the error returned when the CEL expression evaluation fails.
-	ErrrulesRankingPointsFourCELValidation = govaliderrors.ValidationError{Reason: "field RankingPointsFour failed CEL validation: this.MahjongType != 2 || value.Valid", Path: "rules.RankingPointsFour", Type: "cel"}
+	// ErrRulesRankingPointsFourCELValidation is the error returned when the CEL expression evaluation fails.
+	ErrRulesRankingPointsFourCELValidation = govaliderrors.ValidationError{Reason: "field RankingPointsFour failed CEL validation: this.MahjongType != 2 || value.Valid", Path: "Rules.RankingPointsFour", Type: "cel"}
 
-	// ErrrulesFractionalCalculationRequiredValidation is returned when the FractionalCalculation is required but not provided.
-	ErrrulesFractionalCalculationRequiredValidation = govaliderrors.ValidationError{Reason: "field FractionalCalculation is required", Path: "rules.FractionalCalculation", Type: "required"}
+	// ErrRulesFractionalCalculationRequiredValidation is returned when the FractionalCalculation is required but not provided.
+	ErrRulesFractionalCalculationRequiredValidation = govaliderrors.ValidationError{Reason: "field FractionalCalculation is required", Path: "Rules.FractionalCalculation", Type: "required"}
 
-	// ErrrulesUseBustRequiredValidation is returned when the UseBust is required but not provided.
-	ErrrulesUseBustRequiredValidation = govaliderrors.ValidationError{Reason: "field UseBust is required", Path: "rules.UseBust", Type: "required"}
+	// ErrRulesUseBustRequiredValidation is returned when the UseBust is required but not provided.
+	ErrRulesUseBustRequiredValidation = govaliderrors.ValidationError{Reason: "field UseBust is required", Path: "Rules.UseBust", Type: "required"}
 
-	// ErrrulesUseChipRequiredValidation is returned when the UseChip is required but not provided.
-	ErrrulesUseChipRequiredValidation = govaliderrors.ValidationError{Reason: "field UseChip is required", Path: "rules.UseChip", Type: "required"}
+	// ErrRulesUseChipRequiredValidation is returned when the UseChip is required but not provided.
+	ErrRulesUseChipRequiredValidation = govaliderrors.ValidationError{Reason: "field UseChip is required", Path: "Rules.UseChip", Type: "required"}
 )
 
-func Validaterules(t *rules) error {
+func Validaterules(t *Rules) error {
 	if t == nil {
-		return ErrNilrules
+		return ErrNilRules
 	}
 
 	var errs govaliderrors.ValidationErrors
 
 	if t.MahjongType != domain.MahjongTypeThree && t.MahjongType != domain.MahjongTypeFour {
-		err := ErrrulesMahjongTypeEnumValidation
+		err := ErrRulesMahjongTypeEnumValidation
 		err.Value = t.MahjongType
 		errs = append(errs, err)
 	}
 
 	if t.MahjongType == 0 {
-		err := ErrrulesMahjongTypeRequiredValidation
+		err := ErrRulesMahjongTypeRequiredValidation
 		err.Value = t.MahjongType
 		errs = append(errs, err)
 	}
 
 	if !(t.InitialPoints >= 1) {
-		err := ErrrulesInitialPointsGTEValidation
+		err := ErrRulesInitialPointsGTEValidation
 		err.Value = t.InitialPoints
 		errs = append(errs, err)
 	}
 
 	if t.InitialPoints == 0 {
-		err := ErrrulesInitialPointsRequiredValidation
+		err := ErrRulesInitialPointsRequiredValidation
 		err.Value = t.InitialPoints
 		errs = append(errs, err)
 	}
 
 	if !(t.ReturnPoints >= 1) {
-		err := ErrrulesReturnPointsGTEValidation
+		err := ErrRulesReturnPointsGTEValidation
 		err.Value = t.ReturnPoints
 		errs = append(errs, err)
 	}
 
 	if t.ReturnPoints == 0 {
-		err := ErrrulesReturnPointsRequiredValidation
+		err := ErrRulesReturnPointsRequiredValidation
 		err.Value = t.ReturnPoints
 		errs = append(errs, err)
 	}
 
 	if t.RankingPointsFirst == 0 {
-		err := ErrrulesRankingPointsFirstRequiredValidation
+		err := ErrRulesRankingPointsFirstRequiredValidation
 		err.Value = t.RankingPointsFirst
 		errs = append(errs, err)
 	}
 
 	if t.RankingPointsSecond == 0 {
-		err := ErrrulesRankingPointsSecondRequiredValidation
+		err := ErrRulesRankingPointsSecondRequiredValidation
 		err.Value = t.RankingPointsSecond
 		errs = append(errs, err)
 	}
 
 	if t.RankingPointsThird == 0 {
-		err := ErrrulesRankingPointsThirdRequiredValidation
+		err := ErrRulesRankingPointsThirdRequiredValidation
 		err.Value = t.RankingPointsThird
 		errs = append(errs, err)
 	}
 
 	if !((t.MahjongType != 2) || (t.RankingPointsFour.Valid)) {
-		err := ErrrulesRankingPointsFourCELValidation
+		err := ErrRulesRankingPointsFourCELValidation
 		err.Value = t.RankingPointsFour
 		errs = append(errs, err)
 	}
 
 	if t.FractionalCalculation == 0 {
-		err := ErrrulesFractionalCalculationRequiredValidation
+		err := ErrRulesFractionalCalculationRequiredValidation
 		err.Value = t.FractionalCalculation
 		errs = append(errs, err)
 	}
 
 	if t.UseBust == false {
-		err := ErrrulesUseBustRequiredValidation
+		err := ErrRulesUseBustRequiredValidation
 		err.Value = t.UseBust
 		errs = append(errs, err)
 	}
 
 	if t.UseChip == false {
-		err := ErrrulesUseChipRequiredValidation
+		err := ErrRulesUseChipRequiredValidation
 		err.Value = t.UseChip
 		errs = append(errs, err)
 	}
@@ -144,8 +144,8 @@ func Validaterules(t *rules) error {
 	return nil
 }
 
-var _ govalid.Validator = (*rules)(nil)
+var _ govalid.Validator = (*Rules)(nil)
 
-func (t *rules) Validate() error {
+func (t *Rules) Validate() error {
 	return Validaterules(t)
 }

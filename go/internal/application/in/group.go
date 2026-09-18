@@ -11,10 +11,10 @@ type CreateGroupWithRule struct {
 	//govalid:required
 	MemberNames []string `json:"member_names"` // メンバー名
 	//govalid:required
-	Rules rules `json:"rules"` // ルール設定
+	Rules Rules `json:"rules"` // ルール設定
 }
 
-type rules struct {
+type Rules struct {
 	//govalid:required
 	//govalid:enum=domain.MahjongTypeThree,domain.MahjongTypeFour
 	MahjongType domain.MahjongType `json:"mahjong_type"` // 三麻 or 四麻
