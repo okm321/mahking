@@ -11,20 +11,22 @@ import (
 	"github.com/okm321/mahking/go/internal/domain"
 	"github.com/okm321/mahking/go/internal/infrastructure/postgres/sqlc"
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
+	pkgpostgres "github.com/okm321/mahking/go/pkg/postgres"
 )
 
 type GroupRepository struct {
-	q *sqlc.Queries
+	pool *pgxpool.Pool
 }
 
 func NewGroupRepository(pool *pgxpool.Pool) *GroupRepository {
 	return &GroupRepository{
-		q: sqlc.New(pool),
+		pool: pool,
 	}
 }
 
 func (r *GroupRepository) List(ctx context.Context) ([]domain.Group, error) {
-	rows, err := r.q.ListGroups(ctx)
+	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
+	rows, err := q.ListGroups(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("list groups: %w", err)
 	}
@@ -41,10 +43,11 @@ func (r *GroupRepository) List(ctx context.Context) ([]domain.Group, error) {
 }
 
 func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (*domain.Group, error) {
-	row, err := r.q.GetGroupByID(ctx, uid)
+	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
+	row, err := q.GetGroupByID(ctx, uid)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, pkgerror.ErrNotFound
+			return nil, pkgerror.WithStack(pkgerror.ErrNotFound)
 		}
 		return nil, pkgerror.Wrap(err, "get group by uid")
 	}
@@ -57,7 +60,8 @@ func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (*domain.Gr
 }
 
 func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*domain.Group, error) {
-	row, err := r.q.CreateGroup(ctx, group.Name)
+	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
+	row, err := q.CreateGroup(ctx, group.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +81,7 @@ func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*dom
 }
 
 func (r *GroupRepository) createRelatedInfo(ctx context.Context, group *domain.Group) (err error) {
+	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
 	memberParams := make([]sqlc.CreateMembersParams, 0, len(group.Members))
 	for _, m := range group.Members {
 		memberParams = append(memberParams, sqlc.CreateMembersParams{
@@ -84,7 +89,7 @@ func (r *GroupRepository) createRelatedInfo(ctx context.Context, group *domain.G
 			Name:    m.Name,
 		})
 	}
-	_, err = r.q.CreateMembers(ctx, memberParams)
+	_, err = q.CreateMembers(ctx, memberParams)
 	if err != nil {
 		return pkgerror.Wrap(err, "create related members")
 	}
@@ -104,7 +109,7 @@ func (r *GroupRepository) createRelatedInfo(ctx context.Context, group *domain.G
 		UseChip:               group.Rule.UseChip,
 		ChipPoint:             null.IntFromPtr(group.Rule.ChipPoint.Ptr()),
 	}
-	_, err = r.q.CreateRule(ctx, ruleParam)
+	_, err = q.CreateRule(ctx, ruleParam)
 	if err != nil {
 		return pkgerror.Wrap(err, "create related rule")
 	}

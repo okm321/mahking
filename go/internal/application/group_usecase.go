@@ -13,17 +13,20 @@ import (
 type GroupUsecase struct {
 	groupRepo  domain.GroupRepository
 	memberRepo domain.MemberRepository
+	tx         domain.Transactioner
 }
 
 type NewGroupUsecaseArgs struct {
 	GroupRepo  domain.GroupRepository
 	MemberRepo domain.MemberRepository
+	Tx         domain.Transactioner
 }
 
 func NewGroupUsecase(args *NewGroupUsecaseArgs) *GroupUsecase {
 	return &GroupUsecase{
 		groupRepo:  args.GroupRepo,
 		memberRepo: args.MemberRepo,
+		tx:         args.Tx,
 	}
 }
 
@@ -64,6 +67,11 @@ func (u *GroupUsecase) Create(ctx context.Context, in appin.CreateGroupWithRule)
 		return nil, pkgerror.Errorf("invalid input: %w", err)
 	}
 
+	err = in.Rules.Validate()
+	if err != nil {
+		return nil, pkgerror.Errorf("invalid rules: %w", err)
+	}
+
 	dms := make([]*domain.Member, 0, len(in.MemberNames))
 	for _, mn := range in.MemberNames {
 		dm, err := domain.NewMember(0, domain.NewMemberArgs{
@@ -102,10 +110,17 @@ func (u *GroupUsecase) Create(ctx context.Context, in appin.CreateGroupWithRule)
 		return nil, err
 	}
 
-	_, err = u.groupRepo.Create(ctx, dg)
+	var created *domain.Group
+	err = domain.WithTransaction(ctx, u.tx, func(ctx context.Context) error {
+		var createErr error
+		created, createErr = u.groupRepo.Create(ctx, dg)
+		return createErr
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	out := appout.NewGroup(*created)
+
+	return &out, nil
 }

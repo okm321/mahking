@@ -3,7 +3,9 @@ package trace
 import (
 	"context"
 	"fmt"
+	"net/http"
 
+	"go.opentelemetry.io/contrib/propagators/aws/xray"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -49,11 +51,16 @@ func Init(ctx context.Context, cfg Config) (shutdown func(context.Context) error
 
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
+		xray.Propagator{},
 		propagation.TraceContext{},
 		propagation.Baggage{},
 	))
 
 	return tp.Shutdown, nil
+}
+
+func SpanFromRemote(ctx context.Context, header http.Header) context.Context {
+	return otel.GetTextMapPropagator().Extract(ctx, propagation.HeaderCarrier(header))
 }
 
 // StartSpan 新しいSpanを作成し、contextに埋め込んで返す

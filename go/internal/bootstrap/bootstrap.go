@@ -27,12 +27,15 @@ func NewApp(ctx context.Context, cfg *config.Config) (*App, error) {
 		return nil, fmt.Errorf("connect db: %w", err)
 	}
 
+	transactioner := pkgpostgres.NewTransactioner(pool)
+
 	// Repository
 	groupRepo := postgres.NewGroupRepository(pool)
 
 	// Usecase
 	groupUsecase := application.NewGroupUsecase(&application.NewGroupUsecaseArgs{
 		GroupRepo: groupRepo,
+		Tx:        transactioner,
 	})
 
 	// Handler
