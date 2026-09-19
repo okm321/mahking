@@ -1,6 +1,7 @@
 syntax = "proto3";
-
 package mahking.group.v1;
+
+import "buf/validate/validate.proto";
 
 service GroupService {
   rpc GetGroup(GetGroupRequest) returns (GetGroupResponse);
@@ -21,28 +22,34 @@ enum MahjongType {
 
 enum FractionalCalculation {
   FRACTIONAL_CALCULATION_UNSPECIFIED = 0;
-  FRACTIONAL_CALCULATION_DECIMAL = 1;        // 小数点有効
-  FRACTIONAL_CALCULATION_ROUND_DOWN = 2;     // 切り捨て
-  FRACTIONAL_CALCULATION_ROUND_UP = 3;       // 切り上げ
-  FRACTIONAL_CALCULATION_ROUND_NEAREST = 4;  // 四捨五入
-  FRACTIONAL_CALCULATION_ROUND_FIVE = 5;     // 五捨六入
+  FRACTIONAL_CALCULATION_DECIMAL = 1; // 小数点有効
+  FRACTIONAL_CALCULATION_ROUND_DOWN = 2; // 切り捨て
+  FRACTIONAL_CALCULATION_ROUND_UP = 3; // 切り上げ
+  FRACTIONAL_CALCULATION_ROUND_NEAREST = 4; // 四捨五入
+  FRACTIONAL_CALCULATION_ROUND_FIVE = 5; // 五捨六入
 }
 
 enum FractionalRecipient {
   FRACTIONAL_RECIPIENT_UNSPECIFIED = 0;
-  FRACTIONAL_RECIPIENT_FIRST = 1;  // 1位の人
-  FRACTIONAL_RECIPIENT_LAST = 2;   // 最下位の人
+  FRACTIONAL_RECIPIENT_FIRST = 1; // 1位の人
+  FRACTIONAL_RECIPIENT_LAST = 2; // 最下位の人
 }
 
 message Rules {
-  MahjongType mahjong_type = 1;
-  int32 initial_points = 2;
-  int32 return_points = 3;
+  MahjongType mahjong_type = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  int32 initial_points = 2 [(buf.validate.field).int32.gte = 1];
+  int32 return_points = 3 [(buf.validate.field).int32.gte = 1];
   int32 ranking_points_first = 4;
   int32 ranking_points_second = 5;
   int32 ranking_points_third = 6;
   optional int32 ranking_points_four = 7;
-  FractionalCalculation fractional_calculation = 8;
+  FractionalCalculation fractional_calculation = 8 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
   bool use_bust = 9;
   optional int32 bust_point = 10;
   bool use_chip = 11;
@@ -62,9 +69,21 @@ message ListGroupsResponse {
 }
 
 message CreateGroupRequest {
-  string name = 1;
-  repeated string member_names = 2;
-  Rules rules = 3;
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1
+    max_len: 100
+  }];
+  repeated string member_names = 2 [(buf.validate.field).repeated = {
+    min_items: 1
+    max_items: 10
+    items: {
+      string: {
+        min_len: 1
+        max_len: 10
+      }
+    }
+  }];
+  Rules rules = 3 [(buf.validate.field).required = true];
 }
 
 message CreateGroupResponse {

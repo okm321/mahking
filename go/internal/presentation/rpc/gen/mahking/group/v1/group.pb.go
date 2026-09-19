@@ -7,6 +7,7 @@
 package groupv1
 
 import (
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -609,20 +610,22 @@ var File_mahking_group_v1_group_proto protoreflect.FileDescriptor
 
 const file_mahking_group_v1_group_proto_rawDesc = "" +
 	"\n" +
-	"\x1cmahking/group/v1/group.proto\x12\x10mahking.group.v1\"=\n" +
+	"\x1cmahking/group/v1/group.proto\x12\x10mahking.group.v1\x1a\x1bbuf/validate/validate.proto\"=\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\tR\x03uid\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\"\xf6\x04\n" +
-	"\x05Rules\x12@\n" +
-	"\fmahjong_type\x18\x01 \x01(\x0e2\x1d.mahking.group.v1.MahjongTypeR\vmahjongType\x12%\n" +
-	"\x0einitial_points\x18\x02 \x01(\x05R\rinitialPoints\x12#\n" +
-	"\rreturn_points\x18\x03 \x01(\x05R\freturnPoints\x120\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"\xa0\x05\n" +
+	"\x05Rules\x12L\n" +
+	"\fmahjong_type\x18\x01 \x01(\x0e2\x1d.mahking.group.v1.MahjongTypeB\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\vmahjongType\x12.\n" +
+	"\x0einitial_points\x18\x02 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\rinitialPoints\x12,\n" +
+	"\rreturn_points\x18\x03 \x01(\x05B\a\xbaH\x04\x1a\x02(\x01R\freturnPoints\x120\n" +
 	"\x14ranking_points_first\x18\x04 \x01(\x05R\x12rankingPointsFirst\x122\n" +
 	"\x15ranking_points_second\x18\x05 \x01(\x05R\x13rankingPointsSecond\x120\n" +
 	"\x14ranking_points_third\x18\x06 \x01(\x05R\x12rankingPointsThird\x123\n" +
-	"\x13ranking_points_four\x18\a \x01(\x05H\x00R\x11rankingPointsFour\x88\x01\x01\x12^\n" +
-	"\x16fractional_calculation\x18\b \x01(\x0e2'.mahking.group.v1.FractionalCalculationR\x15fractionalCalculation\x12\x19\n" +
+	"\x13ranking_points_four\x18\a \x01(\x05H\x00R\x11rankingPointsFour\x88\x01\x01\x12j\n" +
+	"\x16fractional_calculation\x18\b \x01(\x0e2'.mahking.group.v1.FractionalCalculationB\n" +
+	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\x15fractionalCalculation\x12\x19\n" +
 	"\buse_bust\x18\t \x01(\bR\auseBust\x12\"\n" +
 	"\n" +
 	"bust_point\x18\n" +
@@ -638,11 +641,13 @@ const file_mahking_group_v1_group_proto_rawDesc = "" +
 	"\x10GetGroupResponse\x12-\n" +
 	"\x05group\x18\x01 \x01(\v2\x17.mahking.group.v1.GroupR\x05group\"E\n" +
 	"\x12ListGroupsResponse\x12/\n" +
-	"\x06groups\x18\x01 \x03(\v2\x17.mahking.group.v1.GroupR\x06groups\"z\n" +
-	"\x12CreateGroupRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12!\n" +
-	"\fmember_names\x18\x02 \x03(\tR\vmemberNames\x12-\n" +
-	"\x05rules\x18\x03 \x01(\v2\x17.mahking.group.v1.RulesR\x05rules\"D\n" +
+	"\x06groups\x18\x01 \x03(\v2\x17.mahking.group.v1.GroupR\x06groups\"\xa1\x01\n" +
+	"\x12CreateGroupRequest\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04name\x125\n" +
+	"\fmember_names\x18\x02 \x03(\tB\x12\xbaH\x0f\x92\x01\f\b\x01\x10\n" +
+	"\"\x06r\x04\x10\x01\x18\n" +
+	"R\vmemberNames\x125\n" +
+	"\x05rules\x18\x03 \x01(\v2\x17.mahking.group.v1.RulesB\x06\xbaH\x03\xc8\x01\x01R\x05rules\"D\n" +
 	"\x13CreateGroupResponse\x12-\n" +
 	"\x05group\x18\x01 \x01(\v2\x17.mahking.group.v1.GroupR\x05group*Z\n" +
 	"\vMahjongType\x12\x1c\n" +

@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"connectrpc.com/connect"
+	"connectrpc.com/validate"
 	"github.com/okm321/mahking/go/config"
 	"github.com/okm321/mahking/go/internal/presentation/rpc/gen/mahking/group/v1/groupv1connect"
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
@@ -21,7 +22,7 @@ type ServerSet struct {
 
 func NewHandler(servers ServerSet) http.Handler {
 	mux := http.NewServeMux()
-	interceptors := connect.WithInterceptors(errorInterceptor())
+	interceptors := connect.WithInterceptors(errorInterceptor(), validate.NewInterceptor())
 
 	mux.Handle(groupv1connect.NewGroupServiceHandler(servers.Group, interceptors))
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
