@@ -29,7 +29,7 @@ func NewHandler(servers ServerSet) http.Handler {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	return traceContextMiddleware(mux)
+	return traceContextMiddleware(accessLogMiddleware(mux))
 }
 
 func Run(cfg *config.Config, handler http.Handler) error {
