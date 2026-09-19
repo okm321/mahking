@@ -13,14 +13,14 @@ import (
 func main() {
 	ctx := context.Background()
 	cnf := config.Get()
-	logger.Init(cnf.Server.Debug)
+	logger.Init()
 
 	traceShutdown, err := pkgtrace.Init(ctx, pkgtrace.Config{
-		ServiceName:    cnf.Telemetry.ServiceName,
-		ServiceVersion: cnf.Telemetry.ServiceVersion,
-		Environment:    cnf.Telemetry.Environment,
-		SampleRate:     cnf.Telemetry.SampleRate,
-		Debug:          cnf.Server.Debug,
+		ServiceName:      cnf.Telemetry.ServiceName,
+		ServiceVersion:   cnf.Telemetry.ServiceVersion,
+		Environment:      cnf.Telemetry.Environment,
+		SampleRate:       cnf.Telemetry.SampleRate,
+		ExporterEndpoint: cnf.Telemetry.ExporterEndpoint,
 	})
 	if err != nil {
 		logger.FatalContext(ctx, fmt.Sprintf("trace init failed: %v", err))

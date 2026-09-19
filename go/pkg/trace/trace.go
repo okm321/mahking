@@ -9,6 +9,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -17,11 +18,11 @@ import (
 )
 
 type Config struct {
-	ServiceName    string
-	ServiceVersion string
-	Environment    string
-	SampleRate     float64
-	Debug          bool
+	ServiceName      string
+	ServiceVersion   string
+	Environment      string
+	SampleRate       float64
+	ExporterEndpoint string
 }
 
 // Init はTracerProviderを初期化し、グローバルに設定する。
@@ -45,6 +46,18 @@ func Init(ctx context.Context, cfg Config) (shutdown func(context.Context) error
 			sdktrace.TraceIDRatioBased(cfg.SampleRate),
 			sdktrace.WithRemoteParentNotSampled(sdktrace.TraceIDRatioBased(cfg.SampleRate)),
 		)),
+	}
+
+	if cfg.ExporterEndpoint != "" {
+		exporter, err := otlptracegrpc.New(
+			ctx,
+			otlptracegrpc.WithEndpoint(cfg.ExporterEndpoint),
+			otlptracegrpc.WithInsecure(),
+		)
+		if err != nil {
+			return nil, fmt.Errorf("create exporter: %w", err)
+		}
+		opts = append(opts, sdktrace.WithBatcher(exporter))
 	}
 
 	tp := sdktrace.NewTracerProvider(opts...)

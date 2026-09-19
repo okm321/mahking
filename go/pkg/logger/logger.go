@@ -16,41 +16,26 @@ import (
 
 var defaultLogger *slog.Logger
 
-// Init ロガーの初期化
-func Init(debug bool) {
-	SetDebug(debug)
-}
-
-// SetDebug デバッグモードを設定
-func SetDebug(debug bool) {
-	var handler slog.Handler
-
-	if debug {
-		// 開発環境
-		handler = slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelDebug,
-		})
-	} else {
-		// 本番環境: Cloud Logging形式
-		handler = slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			Level: slog.LevelInfo,
-			ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-				if len(groups) > 0 {
-					return a
-				}
-				switch a.Key {
-				case slog.MessageKey:
-					a.Key = "message"
-				case slog.LevelKey:
-					a.Key = "severity"
-					if level, ok := a.Value.Any().(slog.Level); ok && level == slog.LevelWarn {
-						a.Value = slog.StringValue("WARNING")
-					}
-				}
+// Init ロガーの初期化。JSON形式で標準出力に出す（ローカルで読むときはhumanlogを通す）
+func Init() {
+	handler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if len(groups) > 0 {
 				return a
-			},
-		})
-	}
+			}
+			switch a.Key {
+			case slog.MessageKey:
+				a.Key = "message"
+			case slog.LevelKey:
+				a.Key = "severity"
+				if level, ok := a.Value.Any().(slog.Level); ok && level == slog.LevelWarn {
+					a.Value = slog.StringValue("WARNING")
+				}
+			}
+			return a
+		},
+	})
 
 	defaultLogger = slog.New(handler)
 	slog.SetDefault(defaultLogger)
