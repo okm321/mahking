@@ -12,6 +12,7 @@ import (
 	"github.com/okm321/mahking/go/internal/infrastructure/postgres/sqlc"
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
 	pkgpostgres "github.com/okm321/mahking/go/pkg/postgres"
+	pkgtrace "github.com/okm321/mahking/go/pkg/trace"
 )
 
 type GroupRepository struct {
@@ -59,7 +60,9 @@ func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (*domain.Gr
 	}, nil
 }
 
-func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (*domain.Group, error) {
+func (r *GroupRepository) Create(ctx context.Context, group *domain.Group) (_ *domain.Group, err error) {
+	ctx = pkgtrace.StartSpan(ctx, "GroupRepository.Create")
+	defer func() { pkgtrace.EndSpan(ctx, err) }()
 	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
 	row, err := q.CreateGroup(ctx, group.Name)
 	if err != nil {
