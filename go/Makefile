@@ -1,7 +1,4 @@
-.PHONY: govalid sqlc vet lint con-local-db
-
-govalid: ## govalid のバリデーター生成
-	go tool govalid ./...
+.PHONY: sqlc vet lint con-local-db
 
 sqlc: ## sqlc のクエリコード生成
 	sqlc generate

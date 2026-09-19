@@ -4,11 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strings"
 
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
 	"github.com/okm321/mahking/go/pkg/logger"
-	govaliderrors "github.com/sivchari/govalid/validation/errors"
 )
 
 // AppHandler は error を返せるハンドラー型
@@ -33,16 +31,6 @@ func handleError(w http.ResponseWriter, r *http.Request, err error) {
 		return
 	}
 
-	var validationErrs govaliderrors.ValidationErrors
-	if errors.As(err, &validationErrs) {
-		logger.WarnContext(ctx, err.Error(), "error", err)
-		writeJSON(w, http.StatusBadRequest, pkgerror.ErrorResponse{
-			Message: validationMessage(validationErrs),
-			Reason:  string(pkgerror.ErrCodeValidation),
-		})
-		return
-	}
-
 	var pkgErr *pkgerror.ClientError
 	if errors.As(err, &pkgErr) {
 		logger.WarnContext(ctx, err.Error(), "error", err)
@@ -55,14 +43,6 @@ func handleError(w http.ResponseWriter, r *http.Request, err error) {
 		Message: "internal server error",
 		Reason:  string(pkgerror.ErrCodeInternal),
 	})
-}
-
-func validationMessage(errs govaliderrors.ValidationErrors) string {
-	msgs := make([]string, 0, len(errs))
-	for _, e := range errs {
-		msgs = append(msgs, e.Reason)
-	}
-	return strings.Join(msgs, ", ")
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {

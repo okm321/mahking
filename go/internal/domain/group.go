@@ -7,17 +7,17 @@ import (
 )
 
 type Group struct {
-	ID  int64  // id
-	UID string // uuid
-	//govalid:required
-	//govalid:maxlength=100
-	Name string // グループ名
-	//govalid:required
-	//govalid:maxitems=10
+	ID      int64     // id
+	UID     string    // uuid
+	Name    string    // グループ名
 	Members []*Member // グループメンバー
-	//govalid:required
-	Rule *Rule // グループに紐づくルール
+	Rule    *Rule     // グループに紐づくルール
 }
+
+const (
+	MaxGroupNameLength = 100
+	MaxGroupMembers    = 10
+)
 
 type NewGroupArgs struct {
 	Name    string
@@ -37,10 +37,6 @@ func NewGroup(args NewGroupArgs) (_ *Group, err error) {
 		return nil, err
 	}
 
-	if err = grp.validateRules(); err != nil {
-		return nil, err
-	}
-
 	return &Group{
 		Name:    grp.Name,
 		Members: grp.Members,
@@ -48,16 +44,27 @@ func NewGroup(args NewGroupArgs) (_ *Group, err error) {
 	}, nil
 }
 
-func (g *Group) validateRules() error {
-	if g.Rule.MahjongType.RequiredMemberCount() > len(g.Members) {
+func (g *Group) Validate() error {
+	if err := requireText("グループ名", g.Name, MaxGroupNameLength); err != nil {
+		return err
+	}
+	if len(g.Members) == 0 {
+		return pkgerror.NewClientError("グループメンバーは必須です")
+	}
+	if len(g.Members) > MaxGroupMembers {
+		return pkgerror.NewClientErrorf("グループメンバーは%d人以内で入力してください", MaxGroupMembers)
+	}
+	if g.Rule == nil {
+		return pkgerror.NewClientError("ルールは必須です")
+	}
+	if required := g.Rule.MahjongType.RequiredMemberCount(); len(g.Members) < required {
 		return pkgerror.NewClientErrorf(
-			"%sは最低%d人のメンバーが必要です。 人数: %d人",
+			"%sは最低%d人のメンバーが必要です: %d人",
 			g.Rule.MahjongType.String(),
-			g.Rule.MahjongType.RequiredMemberCount(),
+			required,
 			len(g.Members),
 		)
 	}
-
 	return nil
 }
 

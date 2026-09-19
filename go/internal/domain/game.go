@@ -8,18 +8,15 @@ import (
 )
 
 type Game struct {
-	ID      int64
-	GroupID int64
-	//govalid:maxlength=200
-	Note     string    // 対局メモ（最大200文字）
-	PlayedAt time.Time // 対局日時
-	//govalid:required
-	GameRule *GameRule // 対局時ルールスナップショット
-	//govalid:required
-	//govalid:minitems=3
-	//govalid:maxitems=4
+	ID         int64
+	GroupID    int64
+	Note       string       // 対局メモ（最大200文字）
+	PlayedAt   time.Time    // 対局日時
+	GameRule   *GameRule    // 対局時ルールスナップショット
 	GameScores []*GameScore // 各プレイヤーの成績
 }
+
+const MaxGameNoteLength = 200
 
 type NewGameArgs struct {
 	Note       string
@@ -46,16 +43,18 @@ func NewGame(groupID int64, args NewGameArgs) (*Game, error) {
 		return nil, err
 	}
 
-	if err := g.validateRules(); err != nil {
-		return nil, err
-	}
-
 	g.calculatePoints()
 
 	return g, nil
 }
 
-func (g *Game) validateRules() error {
+func (g *Game) Validate() error {
+	if g.GameRule == nil {
+		return pkgerror.NewClientError("対局ルールは必須です")
+	}
+	if err := optionalText("対局メモ", g.Note, MaxGameNoteLength); err != nil {
+		return err
+	}
 	requiredCount := g.GameRule.MahjongType.RequiredMemberCount()
 	if len(g.GameScores) != requiredCount {
 		return pkgerror.NewClientErrorf(
@@ -70,6 +69,12 @@ func (g *Game) validateRules() error {
 	memberIDMap := make(map[int64]bool)
 	rankingMap := make(map[int]bool)
 	for _, score := range g.GameScores {
+		if !score.Seat.IsValid() {
+			return pkgerror.NewClientErrorf("席が不正です: %d", score.Seat)
+		}
+		if score.Ranking < 1 || score.Ranking > len(g.GameScores) {
+			return pkgerror.NewClientErrorf("順位は1〜%dの範囲で指定してください: %d", len(g.GameScores), score.Ranking)
+		}
 		if seatMap[score.Seat] {
 			return pkgerror.NewClientErrorf("席が重複しています: %s", score.Seat)
 		}
@@ -84,10 +89,6 @@ func (g *Game) validateRules() error {
 			return pkgerror.NewClientErrorf("順位が重複しています: %d位", score.Ranking)
 		}
 		rankingMap[score.Ranking] = true
-
-		if score.Ranking < 1 || score.Ranking > len(g.GameScores) {
-			return pkgerror.NewClientErrorf("順位は1〜%dの範囲で指定してください: %d", len(g.GameScores), score.Ranking)
-		}
 
 		if g.GameRule.UseChip && !score.ChipCount.Valid {
 			return pkgerror.NewClientErrorf("チップ枚数は必須です: メンバーID %d", score.MemberID)

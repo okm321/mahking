@@ -3,24 +3,16 @@ package domain
 import "github.com/guregu/null/v6"
 
 type GameRule struct {
-	ID      int64
-	GameID  int64
-	GroupID int64
-	//govalid:required
-	//govalid:enum=MahjongTypeThree,MahjongTypeFour
-	MahjongType MahjongType // 三麻 or 四麻
-	//govalid:required
-	//govalid:gte=1
-	InitialPoints int // 持ち点（単位: 1,000）
-	//govalid:required
-	//govalid:gte=1
-	ReturnPoints        int      // 返し点（単位: 1,000）
-	RankingPointsFirst  int      // 一位のウマ
-	RankingPointsSecond int      // 二位のウマ
-	RankingPointsThird  int      // 三位のウマ
-	RankingPointsFour   null.Int // 四位のウマ
-	//govalid:required
-	//govalid:enum=FractionalCalculationDecimal,FractionalCalculationRoundDown,FractionalCalculationRoundUp,FractionalCalculationRoundNearest,FractionalCalculationRoundFive
+	ID                    int64
+	GameID                int64
+	GroupID               int64
+	MahjongType           MahjongType           // 三麻 or 四麻
+	InitialPoints         int                   // 持ち点（単位: 1,000）
+	ReturnPoints          int                   // 返し点（単位: 1,000）
+	RankingPointsFirst    int                   // 一位のウマ
+	RankingPointsSecond   int                   // 二位のウマ
+	RankingPointsThird    int                   // 三位のウマ
+	RankingPointsFour     null.Int              // 四位のウマ
 	FractionalCalculation FractionalCalculation // 端数計算方法
 	FractionalRecipient   FractionalRecipient   // 端数を受け取る人
 	UseBust               bool                  // 飛び設定

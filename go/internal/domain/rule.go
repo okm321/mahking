@@ -6,29 +6,21 @@ import (
 )
 
 type Rule struct {
-	ID      int64
-	GroupID int64
-	//govalid:required
-	//govalid:enum=MahjongTypeThree,MahjongTypeFour
-	MahjongType MahjongType // 三麻 or 四麻
-	//govalid:required
-	//govalid:gte=1
-	InitialPoints int // 持ち点（単位: 1,000）
-	//govalid:required
-	//govalid:gte=1
-	ReturnPoints int // 返し点（単位: 1,000）
-	RankingPointsFirst  int      // 一位のウマ
-	RankingPointsSecond int      // 二位のウマ
-	RankingPointsThird  int      // 三位のウマ
-	RankingPointsFour   null.Int // 四位のウマ
-	//govalid:required
-	//govalid:enum=FractionalCalculationDecimal,FractionalCalculationRoundDown,FractionalCalculationRoundUp,FractionalCalculationRoundNearest,FractionalCalculationRoundFive
+	ID                    int64
+	GroupID               int64
+	MahjongType           MahjongType           // 三麻 or 四麻
+	InitialPoints         int                   // 持ち点（単位: 1,000）
+	ReturnPoints          int                   // 返し点（単位: 1,000）
+	RankingPointsFirst    int                   // 一位のウマ
+	RankingPointsSecond   int                   // 二位のウマ
+	RankingPointsThird    int                   // 三位のウマ
+	RankingPointsFour     null.Int              // 四位のウマ
 	FractionalCalculation FractionalCalculation // 端数計算方法
 	FractionalRecipient   FractionalRecipient   // 端数を受け取る人（小数点有効以外の場合必須）
 	UseBust               bool                  // 飛び設定
-	BustPoint null.Int // 飛び賞のポイント
-	UseChip   bool     // チップ設定
-	ChipPoint null.Int // チップのポイント
+	BustPoint             null.Int              // 飛び賞のポイント
+	UseChip               bool                  // チップ設定
+	ChipPoint             null.Int              // チップのポイント
 }
 
 type NewRuleArgs struct {
@@ -69,14 +61,22 @@ func NewRule(groupID int64, args NewRuleArgs) (_ *Rule, err error) {
 		return nil, err
 	}
 
-	if err := r.validateRules(); err != nil {
-		return nil, err
-	}
-
 	return r, nil
 }
 
-func (r *Rule) validateRules() error {
+func (r *Rule) Validate() error {
+	if !r.MahjongType.IsValid() {
+		return pkgerror.NewClientErrorf("麻雀の種類が不正です: %d", r.MahjongType)
+	}
+	if r.InitialPoints < 1 {
+		return pkgerror.NewClientErrorf("持ち点は1以上である必要があります: %d", r.InitialPoints)
+	}
+	if r.ReturnPoints < 1 {
+		return pkgerror.NewClientErrorf("返し点は1以上である必要があります: %d", r.ReturnPoints)
+	}
+	if !r.FractionalCalculation.IsValid() {
+		return pkgerror.NewClientErrorf("端数計算方法が不正です: %d", r.FractionalCalculation)
+	}
 	switch r.MahjongType {
 	case MahjongTypeThree:
 		if r.RankingPointsFirst+r.RankingPointsSecond+r.RankingPointsThird != 0 {

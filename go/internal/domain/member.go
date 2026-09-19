@@ -1,10 +1,6 @@
 package domain
 
-import (
-	"context"
-
-	pkgerror "github.com/okm321/mahking/go/pkg/error"
-)
+import "context"
 
 type Member struct {
 	ID      int64
@@ -19,13 +15,7 @@ type NewMemberArgs struct {
 const MaxMemberNameLength = 10
 
 func (a NewMemberArgs) validate() error {
-	if a.Name == "" {
-		return pkgerror.NewClientError("名前は必須です")
-	}
-	if len(a.Name) > MaxMemberNameLength {
-		return pkgerror.NewClientErrorf("名前は%d文字以内で入力してください: %s", MaxMemberNameLength, a.Name)
-	}
-	return nil
+	return requireText("名前", a.Name, MaxMemberNameLength)
 }
 
 func NewMember(groupID int64, args NewMemberArgs) (_ *Member, err error) {

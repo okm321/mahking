@@ -6,7 +6,6 @@ import (
 
 	"connectrpc.com/connect"
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
-	govaliderrors "github.com/sivchari/govalid/validation/errors"
 )
 
 func TestToConnectError(t *testing.T) {
@@ -30,16 +29,6 @@ func TestToConnectError(t *testing.T) {
 			wantCode:    connect.CodeInvalidArgument,
 			wantClient:  true,
 			wantMessage: "名前は必須です",
-		},
-		{
-			name: "validation errors",
-			err: pkgerror.Errorf("invalid input: %w", govaliderrors.ValidationErrors{
-				{Reason: "field Name is required"},
-				{Reason: "field MemberNames is required"},
-			}),
-			wantCode:    connect.CodeInvalidArgument,
-			wantClient:  true,
-			wantMessage: "field Name is required, field MemberNames is required",
 		},
 		{
 			name:        "connect error passes through",

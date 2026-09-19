@@ -62,16 +62,6 @@ func (u *GroupUsecase) Create(ctx context.Context, in appin.CreateGroupWithRule)
 	ctx = pkgtrace.StartSpan(ctx, "GroupUsecase.Create")
 	defer func() { pkgtrace.EndSpan(ctx, err) }()
 
-	err = in.Validate()
-	if err != nil {
-		return nil, pkgerror.Errorf("invalid input: %w", err)
-	}
-
-	err = in.Rules.Validate()
-	if err != nil {
-		return nil, pkgerror.Errorf("invalid rules: %w", err)
-	}
-
 	dms := make([]*domain.Member, 0, len(in.MemberNames))
 	for _, mn := range in.MemberNames {
 		dm, err := domain.NewMember(0, domain.NewMemberArgs{
