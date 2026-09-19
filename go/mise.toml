@@ -1,2 +1,5 @@
 [tools]
 go = "1.26.6"
+
+[env]
+OTEL_EXPORTER_OTLP_ENDPOINT = "localhost:4317"

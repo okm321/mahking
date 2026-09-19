@@ -12,3 +12,8 @@ services:
       POSTGRES_PASSWORD: "password"
       PGPASSWORD: "password"
     command: postgres -c max_locks_per_transaction=1024 -c fsync=off
+  jaeger:
+    image: jaegertracing/jaeger:2.21.0
+    ports:
+      - "16686:16686"
+      - "4317:4317"

@@ -37,3 +37,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 .aider*
+
+# mise 個人設定
+mise.local.toml
