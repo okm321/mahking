@@ -25,7 +25,9 @@ func NewGroupRepository(pool *pgxpool.Pool) *GroupRepository {
 	}
 }
 
-func (r *GroupRepository) List(ctx context.Context) ([]domain.Group, error) {
+func (r *GroupRepository) List(ctx context.Context) (_ []domain.Group, err error) {
+	ctx = pkgtrace.StartSpan(ctx, "GroupRepository.List")
+	defer func() { pkgtrace.EndSpan(ctx, err) }()
 	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
 	rows, err := q.ListGroups(ctx)
 	if err != nil {
@@ -43,7 +45,9 @@ func (r *GroupRepository) List(ctx context.Context) ([]domain.Group, error) {
 	return groups, nil
 }
 
-func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (*domain.Group, error) {
+func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (_ *domain.Group, err error) {
+	ctx = pkgtrace.StartSpan(ctx, "GroupRepository.GetByUUID")
+	defer func() { pkgtrace.EndSpan(ctx, err) }()
 	q := sqlc.New(pkgpostgres.GetExecutor(ctx, r.pool))
 	row, err := q.GetGroupByID(ctx, uid)
 	if err != nil {
