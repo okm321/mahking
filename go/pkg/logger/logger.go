@@ -128,11 +128,14 @@ func logWithTrace(ctx context.Context, level slog.Level, msg string, args ...any
 	// エラーを自動検出してstacktraceを付ける
 	args = processErrorsInArgs(args)
 
-	// トレース情報を取得
-	if traceAttrs := traceAttrs(ctx); len(traceAttrs) > 0 {
-		// トレース情報を引数の先頭に追加
-		newArgs := make([]any, 0, len(args)+len(traceAttrs)*2)
-		for _, attr := range traceAttrs {
+	attrs := traceAttrs(ctx)
+	if p, ok := procedureFrom(ctx); ok {
+		attrs = append(attrs, slog.String("procedure", p))
+	}
+
+	if len(attrs) > 0 {
+		newArgs := make([]any, 0, len(args)+len(attrs)*2)
+		for _, attr := range attrs {
 			newArgs = append(newArgs, attr.Key, attr.Value.Any())
 		}
 		newArgs = append(newArgs, args...)
@@ -236,4 +239,15 @@ func LargeInfo(ctx context.Context, msg string) {
 			"split", split,
 		)
 	}
+}
+
+type ctxKeyProcedure struct{}
+
+func WithProcedure(ctx context.Context, p string) context.Context {
+	return context.WithValue(ctx, ctxKeyProcedure{}, p)
+}
+
+func procedureFrom(ctx context.Context) (string, bool) {
+	p, ok := ctx.Value(ctxKeyProcedure{}).(string)
+	return p, ok
 }

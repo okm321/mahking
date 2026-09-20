@@ -11,6 +11,7 @@ func errorInterceptor() connect.Interceptor {
 	return connect.UnaryInterceptorFunc(
 		func(next connect.UnaryFunc) connect.UnaryFunc {
 			return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+				ctx = logger.WithProcedure(ctx, req.Spec().Procedure)
 				res, err := next(ctx, req)
 				if err == nil {
 					return res, nil
