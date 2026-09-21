@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help schema-export proxy db-password db-connect migrate-status migrate-apply migrate-diff local-migrate-new local-migrate-apply local-migrate-status local-migrate-hash
+.PHONY: help schema-export proxy db-password db-connect migrate-status migrate-apply migrate-diff local-migrate-new local-migrate-apply local-migrate-status local-migrate-hash local-migrate-reset
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -70,3 +70,7 @@ local-migrate-status: ## [local] マイグレーション状態を確認
 
 local-migrate-hash:   ## [local] チェックサムを再計算（マイグレーション手動編集後に実行）
 	@atlas migrate hash --env local
+
+local-migrate-reset:  ## [local] スキーマを空にして migrations を最初から全部適用（データは消える）
+	@atlas schema clean --env local --auto-approve
+	@atlas migrate apply --env local
