@@ -5,6 +5,7 @@ import (
 	"time"
 
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
+	pkgtime "github.com/okm321/mahking/go/pkg/time"
 )
 
 type Game struct {
@@ -25,10 +26,10 @@ type NewGameArgs struct {
 	GameScores []*GameScore
 }
 
-func NewGame(groupID int64, args NewGameArgs) (*Game, error) {
+func NewGame(ctx context.Context, groupID int64, args NewGameArgs) (*Game, error) {
 	playedAt := args.PlayedAt
 	if playedAt.IsZero() {
-		playedAt = time.Now()
+		playedAt = pkgtime.Now(ctx)
 	}
 
 	g := &Game{
