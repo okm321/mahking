@@ -132,6 +132,7 @@ func (r *GroupRepository) createRelatedInfo(ctx context.Context, group *domain.G
 		RankingPointsThird:    int32(group.Rule.RankingPointsThird),  //nolint:gosec // 点数はint32範囲内
 		RankingPointsFourth:   null.IntFromPtr(group.Rule.RankingPointsFour.Ptr()),
 		FractionalCalculation: int32(group.Rule.FractionalCalculation), //nolint:gosec // 計算方法は1-5の範囲
+		FractionalRecipient:   nullIntFromRecipient(group.Rule.FractionalRecipient),
 		UseBust:               group.Rule.UseBust,
 		BustPoint:             null.IntFromPtr(group.Rule.BustPoint.Ptr()),
 		UseChip:               group.Rule.UseChip,
@@ -159,9 +160,18 @@ func toDomainRule(r sqlc.Rule) *domain.Rule {
 		RankingPointsThird:    int(r.RankingPointsThird),
 		RankingPointsFour:     r.RankingPointsFourth,
 		FractionalCalculation: domain.FractionalCalculation(r.FractionalCalculation),
+		FractionalRecipient:   domain.FractionalRecipient(r.FractionalRecipient.Int64),
 		UseBust:               r.UseBust,
 		BustPoint:             r.BustPoint,
 		UseChip:               r.UseChip,
 		ChipPoint:             r.ChipPoint,
 	}
+}
+
+// nullIntFromRecipient 未指定（ゼロ値）は NULL、それ以外は値として保存する
+func nullIntFromRecipient(r domain.FractionalRecipient) null.Int {
+	if !r.IsValid() {
+		return null.Int{}
+	}
+	return null.IntFrom(int64(r))
 }

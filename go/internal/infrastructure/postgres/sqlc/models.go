@@ -65,6 +65,8 @@ type GameRule struct {
 	ChipPoint null.Int           `json:"chip_point"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	// 1: 1位の人, 2: 最下位の人
+	FractionalRecipient null.Int `json:"fractional_recipient"`
 }
 
 type GameScore struct {
@@ -133,4 +135,6 @@ type Rule struct {
 	ChipPoint null.Int           `json:"chip_point"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	// 1: 1位の人, 2: 最下位の人
+	FractionalRecipient null.Int `json:"fractional_recipient"`
 }

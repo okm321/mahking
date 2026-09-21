@@ -2,12 +2,14 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.9 (Debian 16.9-1.pgdg110+1)
--- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg110+1)
+
+-- Dumped from database version 18.6 (Debian 18.6-1.pgdg13+2)
+-- Dumped by pg_dump version 18.6 (Debian 18.6-1.pgdg13+2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -90,6 +92,7 @@ CREATE TABLE game_rules (
     chip_point integer,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    fractional_recipient integer,
     CONSTRAINT chk_game_rules_bust_point CHECK ((((use_bust = true) AND (bust_point IS NOT NULL) AND (bust_point > 0)) OR ((use_bust = false) AND (bust_point IS NULL)))),
     CONSTRAINT chk_game_rules_chip_point CHECK ((((use_chip = true) AND (chip_point IS NOT NULL) AND (chip_point > 0)) OR ((use_chip = false) AND (chip_point IS NULL)))),
     CONSTRAINT chk_game_rules_ranking_points CHECK (
@@ -99,6 +102,7 @@ CASE
     ELSE NULL::boolean
 END),
     CONSTRAINT game_rules_fractional_calculation_check CHECK ((fractional_calculation = ANY (ARRAY[1, 2, 3, 4, 5]))),
+    CONSTRAINT game_rules_fractional_recipient_check CHECK ((fractional_recipient = ANY (ARRAY[1, 2]))),
     CONSTRAINT game_rules_initial_points_check CHECK ((initial_points > 0)),
     CONSTRAINT game_rules_mahjong_type_check CHECK ((mahjong_type = ANY (ARRAY[1, 2]))),
     CONSTRAINT game_rules_return_points_check CHECK ((return_points > 0))
@@ -189,6 +193,13 @@ COMMENT ON COLUMN game_rules.use_chip IS 'チップ設定';
 --
 
 COMMENT ON COLUMN game_rules.chip_point IS 'チップのポイント';
+
+
+--
+-- Name: COLUMN game_rules.fractional_recipient; Type: COMMENT; Schema: mahking_local; Owner: postgres
+--
+
+COMMENT ON COLUMN game_rules.fractional_recipient IS '1: 1位の人, 2: 最下位の人';
 
 
 --
@@ -408,8 +419,10 @@ CREATE TABLE rules (
     chip_point integer,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    fractional_recipient integer,
     CONSTRAINT chk_bust_point_if_use_bust CHECK ((((use_bust = true) AND (bust_point IS NOT NULL) AND (bust_point > 0)) OR ((use_bust = false) AND (bust_point IS NULL)))),
     CONSTRAINT chk_chip_point_if_use_chip CHECK ((((use_chip = true) AND (chip_point IS NOT NULL) AND (chip_point > 0)) OR ((use_chip = false) AND (chip_point IS NULL)))),
+    CONSTRAINT chk_fractional_recipient CHECK ((((fractional_calculation = 1) AND (fractional_recipient IS NULL)) OR ((fractional_calculation <> 1) AND (fractional_recipient IS NOT NULL)))),
     CONSTRAINT chk_ranking_points_by_mahjong_type CHECK (
 CASE
     WHEN (mahjong_type = 1) THEN ((ranking_points_fourth IS NULL) AND (((ranking_points_first + ranking_points_second) + ranking_points_third) = 0))
@@ -417,6 +430,7 @@ CASE
     ELSE NULL::boolean
 END),
     CONSTRAINT rules_fractional_calculation_check CHECK ((fractional_calculation = ANY (ARRAY[1, 2, 3, 4, 5]))),
+    CONSTRAINT rules_fractional_recipient_check CHECK ((fractional_recipient = ANY (ARRAY[1, 2]))),
     CONSTRAINT rules_initial_points_check CHECK ((initial_points > 0)),
     CONSTRAINT rules_mahjong_type_check CHECK ((mahjong_type = ANY (ARRAY[1, 2]))),
     CONSTRAINT rules_return_points_check CHECK ((return_points > 0))
@@ -507,6 +521,13 @@ COMMENT ON COLUMN rules.use_chip IS 'チップ設定';
 --
 
 COMMENT ON COLUMN rules.chip_point IS 'チップのポイント';
+
+
+--
+-- Name: COLUMN rules.fractional_recipient; Type: COMMENT; Schema: mahking_local; Owner: postgres
+--
+
+COMMENT ON COLUMN rules.fractional_recipient IS '1: 1位の人, 2: 最下位の人';
 
 
 --
@@ -843,4 +864,5 @@ ALTER TABLE rules ENABLE ROW LEVEL SECURITY;
 --
 -- PostgreSQL database dump complete
 --
+
 

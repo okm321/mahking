@@ -10,6 +10,7 @@ INSERT INTO game_rules (
   ranking_points_third,
   ranking_points_fourth,
   fractional_calculation,
+  fractional_recipient,
   use_bust,
   bust_point,
   use_chip,
@@ -26,6 +27,7 @@ VALUES (
   @ranking_points_third,
   @ranking_points_fourth,
   @fractional_calculation,
+  @fractional_recipient,
   @use_bust,
   @bust_point,
   @use_chip,
@@ -43,6 +45,7 @@ RETURNING
   ranking_points_third,
   ranking_points_fourth,
   fractional_calculation,
+  fractional_recipient,
   use_bust,
   bust_point,
   use_chip,
@@ -68,7 +71,8 @@ SELECT
   use_chip,
   chip_point,
   created_at,
-  updated_at
+  updated_at,
+  fractional_recipient
 FROM
   game_rules
 WHERE

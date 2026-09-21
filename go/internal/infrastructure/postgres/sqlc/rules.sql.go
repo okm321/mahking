@@ -9,6 +9,7 @@ import (
 	"context"
 
 	null "github.com/guregu/null/v6"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createRule = `-- name: CreateRule :one
@@ -22,6 +23,7 @@ INSERT INTO rules (
   ranking_points_third,
   ranking_points_fourth,
   fractional_calculation,
+  fractional_recipient,
   use_bust,
   bust_point,
   use_chip,
@@ -40,7 +42,8 @@ VALUES (
   $10,
   $11,
   $12,
-  $13
+  $13,
+  $14
 )
 RETURNING
   id,
@@ -53,6 +56,7 @@ RETURNING
   ranking_points_third,
   ranking_points_fourth,
   fractional_calculation,
+  fractional_recipient,
   use_bust,
   bust_point,
   use_chip,
@@ -71,13 +75,34 @@ type CreateRuleParams struct {
 	RankingPointsThird    int32    `json:"ranking_points_third"`
 	RankingPointsFourth   null.Int `json:"ranking_points_fourth"`
 	FractionalCalculation int32    `json:"fractional_calculation"`
+	FractionalRecipient   null.Int `json:"fractional_recipient"`
 	UseBust               bool     `json:"use_bust"`
 	BustPoint             null.Int `json:"bust_point"`
 	UseChip               bool     `json:"use_chip"`
 	ChipPoint             null.Int `json:"chip_point"`
 }
 
-func (q *Queries) CreateRule(ctx context.Context, arg CreateRuleParams) (Rule, error) {
+type CreateRuleRow struct {
+	ID                    int64              `json:"id"`
+	GroupID               int64              `json:"group_id"`
+	MahjongType           int32              `json:"mahjong_type"`
+	InitialPoints         int32              `json:"initial_points"`
+	ReturnPoints          int32              `json:"return_points"`
+	RankingPointsFirst    int32              `json:"ranking_points_first"`
+	RankingPointsSecond   int32              `json:"ranking_points_second"`
+	RankingPointsThird    int32              `json:"ranking_points_third"`
+	RankingPointsFourth   null.Int           `json:"ranking_points_fourth"`
+	FractionalCalculation int32              `json:"fractional_calculation"`
+	FractionalRecipient   null.Int           `json:"fractional_recipient"`
+	UseBust               bool               `json:"use_bust"`
+	BustPoint             null.Int           `json:"bust_point"`
+	UseChip               bool               `json:"use_chip"`
+	ChipPoint             null.Int           `json:"chip_point"`
+	CreatedAt             pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt             pgtype.Timestamptz `json:"updated_at"`
+}
+
+func (q *Queries) CreateRule(ctx context.Context, arg CreateRuleParams) (CreateRuleRow, error) {
 	row := q.db.QueryRow(ctx, createRule,
 		arg.GroupID,
 		arg.MahjongType,
@@ -88,12 +113,13 @@ func (q *Queries) CreateRule(ctx context.Context, arg CreateRuleParams) (Rule, e
 		arg.RankingPointsThird,
 		arg.RankingPointsFourth,
 		arg.FractionalCalculation,
+		arg.FractionalRecipient,
 		arg.UseBust,
 		arg.BustPoint,
 		arg.UseChip,
 		arg.ChipPoint,
 	)
-	var i Rule
+	var i CreateRuleRow
 	err := row.Scan(
 		&i.ID,
 		&i.GroupID,
@@ -105,6 +131,7 @@ func (q *Queries) CreateRule(ctx context.Context, arg CreateRuleParams) (Rule, e
 		&i.RankingPointsThird,
 		&i.RankingPointsFourth,
 		&i.FractionalCalculation,
+		&i.FractionalRecipient,
 		&i.UseBust,
 		&i.BustPoint,
 		&i.UseChip,
@@ -132,7 +159,8 @@ SELECT
   use_chip,
   chip_point,
   created_at,
-  updated_at
+  updated_at,
+  fractional_recipient
 FROM
   rules
 WHERE
@@ -159,6 +187,7 @@ func (q *Queries) GetRuleByGroupID(ctx context.Context, groupID int64) (Rule, er
 		&i.ChipPoint,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.FractionalRecipient,
 	)
 	return i, err
 }

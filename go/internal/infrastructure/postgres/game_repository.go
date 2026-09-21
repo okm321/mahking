@@ -65,6 +65,7 @@ func (r *GameRepository) createRelatedInfo(ctx context.Context, game *domain.Gam
 		RankingPointsThird:    int32(gr.RankingPointsThird),  //nolint:gosec // 点数はint32範囲内
 		RankingPointsFourth:   gr.RankingPointsFour,
 		FractionalCalculation: int32(gr.FractionalCalculation), //nolint:gosec // 計算方法は1-5の範囲
+		FractionalRecipient:   nullIntFromRecipient(gr.FractionalRecipient),
 		UseBust:               gr.UseBust,
 		BustPoint:             gr.BustPoint,
 		UseChip:               gr.UseChip,
@@ -162,6 +163,7 @@ func toDomainGameRule(r sqlc.GameRule) *domain.GameRule {
 			RankingPointsThird:    int(r.RankingPointsThird),
 			RankingPointsFour:     r.RankingPointsFourth,
 			FractionalCalculation: domain.FractionalCalculation(r.FractionalCalculation),
+			FractionalRecipient:   domain.FractionalRecipient(r.FractionalRecipient.Int64),
 			UseBust:               r.UseBust,
 			BustPoint:             r.BustPoint,
 			UseChip:               r.UseChip,
