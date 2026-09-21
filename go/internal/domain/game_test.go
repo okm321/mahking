@@ -18,15 +18,17 @@ func TestGame_calculatePoints(t *testing.T) {
 	// 四麻共通: 持ち25,000 / 返し30,000 / ウマ +20,+10,-10,-20
 	fourPlayerRule := func(fc FractionalCalculation, fr FractionalRecipient) *GameRule {
 		return &GameRule{
-			MahjongType:           MahjongTypeFour,
-			InitialPoints:         25,
-			ReturnPoints:          30,
-			RankingPointsFirst:    20,
-			RankingPointsSecond:   10,
-			RankingPointsThird:    -10,
-			RankingPointsFour:     null.IntFrom(-20),
-			FractionalCalculation: fc,
-			FractionalRecipient:   fr,
+			Rule: Rule{
+				MahjongType:           MahjongTypeFour,
+				InitialPoints:         25,
+				ReturnPoints:          30,
+				RankingPointsFirst:    20,
+				RankingPointsSecond:   10,
+				RankingPointsThird:    -10,
+				RankingPointsFour:     null.IntFrom(-20),
+				FractionalCalculation: fc,
+				FractionalRecipient:   fr,
+			},
 		}
 	}
 
@@ -124,14 +126,16 @@ func TestGame_calculatePoints(t *testing.T) {
 			name: "四麻/オカなし",
 			game: &Game{
 				GameRule: &GameRule{
-					MahjongType:           MahjongTypeFour,
-					InitialPoints:         25,
-					ReturnPoints:          25,
-					RankingPointsFirst:    20,
-					RankingPointsSecond:   10,
-					RankingPointsThird:    -10,
-					RankingPointsFour:     null.IntFrom(-20),
-					FractionalCalculation: FractionalCalculationDecimal,
+					Rule: Rule{
+						MahjongType:           MahjongTypeFour,
+						InitialPoints:         25,
+						ReturnPoints:          25,
+						RankingPointsFirst:    20,
+						RankingPointsSecond:   10,
+						RankingPointsThird:    -10,
+						RankingPointsFour:     null.IntFrom(-20),
+						FractionalCalculation: FractionalCalculationDecimal,
+					},
 				},
 				GameScores: []*GameScore{
 					testScore(1, 400), // diff=15 → 15+20=35
@@ -167,14 +171,16 @@ func TestGame_calculatePoints(t *testing.T) {
 			name: "三麻/切り捨て/端数→1位",
 			game: &Game{
 				GameRule: &GameRule{
-					MahjongType:           MahjongTypeThree,
-					InitialPoints:         35,
-					ReturnPoints:          40,
-					RankingPointsFirst:    15,
-					RankingPointsSecond:   0,
-					RankingPointsThird:    -15,
-					FractionalCalculation: FractionalCalculationRoundDown,
-					FractionalRecipient:   FractionalRecipientFirst,
+					Rule: Rule{
+						MahjongType:           MahjongTypeThree,
+						InitialPoints:         35,
+						ReturnPoints:          40,
+						RankingPointsFirst:    15,
+						RankingPointsSecond:   0,
+						RankingPointsThird:    -15,
+						FractionalCalculation: FractionalCalculationRoundDown,
+						FractionalRecipient:   FractionalRecipientFirst,
+					},
 				},
 				GameScores: []*GameScore{
 					// TODO(human): 素点と期待値を埋めてください
