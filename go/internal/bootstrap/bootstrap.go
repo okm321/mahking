@@ -31,9 +31,15 @@ func NewApp(ctx context.Context, cfg *config.Config) (*App, error) {
 
 	// Repository
 	groupRepo := postgres.NewGroupRepository(pool)
+	gameRepo := postgres.NewGameRepository(pool)
 
 	// Usecase
 	groupUsecase := application.NewGroupUsecase(&application.NewGroupUsecaseArgs{
+		GroupRepo: groupRepo,
+		Tx:        transactioner,
+	})
+	gameUsecase := application.NewGameUsecase(&application.NewGameUsecaseArgs{
+		GameRepo:  gameRepo,
 		GroupRepo: groupRepo,
 		Tx:        transactioner,
 	})
@@ -41,6 +47,7 @@ func NewApp(ctx context.Context, cfg *config.Config) (*App, error) {
 	// Handler
 	handler := rpc.NewHandler(rpc.ServerSet{
 		Group: rpc.NewGroupServer(groupUsecase),
+		Game:  rpc.NewGameServer(gameUsecase),
 	})
 
 	return &App{cfg: cfg, handler: handler, pool: pool}, nil

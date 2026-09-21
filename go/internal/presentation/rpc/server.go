@@ -11,6 +11,7 @@ import (
 	"connectrpc.com/connect"
 	"connectrpc.com/validate"
 	"github.com/okm321/mahking/go/config"
+	"github.com/okm321/mahking/go/internal/presentation/rpc/gen/mahking/game/v1/gamev1connect"
 	"github.com/okm321/mahking/go/internal/presentation/rpc/gen/mahking/group/v1/groupv1connect"
 	pkgerror "github.com/okm321/mahking/go/pkg/error"
 	"github.com/okm321/mahking/go/pkg/logger"
@@ -18,6 +19,7 @@ import (
 
 type ServerSet struct {
 	Group *GroupServer
+	Game  *GameServer
 }
 
 func NewHandler(servers ServerSet) http.Handler {
@@ -25,6 +27,7 @@ func NewHandler(servers ServerSet) http.Handler {
 	interceptors := connect.WithInterceptors(errorInterceptor(), validate.NewInterceptor())
 
 	mux.Handle(groupv1connect.NewGroupServiceHandler(servers.Group, interceptors))
+	mux.Handle(gamev1connect.NewGameServiceHandler(servers.Game, interceptors))
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})

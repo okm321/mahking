@@ -35,10 +35,33 @@ func toCreateGroupInput(req *groupv1.CreateGroupRequest) in.CreateGroupWithRule 
 }
 
 func toProtoGroup(g *out.Group) *groupv1.Group {
+	members := make([]*groupv1.Member, 0, len(g.Members))
+	for _, m := range g.Members {
+		members = append(members, &groupv1.Member{Id: m.ID, Name: m.Name})
+	}
 	return &groupv1.Group{
-		Id:   g.ID,
-		Uid:  g.UID,
-		Name: g.Name,
+		Id:      g.ID,
+		Uid:     g.UID,
+		Name:    g.Name,
+		Members: members,
+		Rules:   toProtoRules(g.Rule),
+	}
+}
+
+func toProtoRules(r out.Rule) *groupv1.Rules {
+	return &groupv1.Rules{
+		MahjongType:           groupv1.MahjongType(r.MahjongType), //nolint:gosec // 麻雀タイプは1-2の範囲
+		InitialPoints:         int32(r.InitialPoints),             //nolint:gosec // 点数はint32範囲内
+		ReturnPoints:          int32(r.ReturnPoints),              //nolint:gosec // 点数はint32範囲内
+		RankingPointsFirst:    int32(r.RankingPointsFirst),        //nolint:gosec // 点数はint32範囲内
+		RankingPointsSecond:   int32(r.RankingPointsSecond),       //nolint:gosec // 点数はint32範囲内
+		RankingPointsThird:    int32(r.RankingPointsThird),        //nolint:gosec // 点数はint32範囲内
+		RankingPointsFour:     int32PtrFromNull(r.RankingPointsFour),
+		FractionalCalculation: groupv1.FractionalCalculation(r.FractionalCalculation), //nolint:gosec // 計算方法は1-5の範囲
+		UseBust:               r.UseBust,
+		BustPoint:             int32PtrFromNull(r.BustPoint),
+		UseChip:               r.UseChip,
+		ChipPoint:             int32PtrFromNull(r.ChipPoint),
 	}
 }
 
@@ -47,4 +70,12 @@ func nullIntFromPtr(p *int32) null.Int {
 		return null.Int{}
 	}
 	return null.IntFrom(int64(*p))
+}
+
+func int32PtrFromNull(n null.Int) *int32 {
+	if !n.Valid {
+		return nil
+	}
+	v := int32(n.Int64) //nolint:gosec // 点数はint32範囲内
+	return &v
 }
