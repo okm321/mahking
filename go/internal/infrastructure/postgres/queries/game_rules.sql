@@ -1,5 +1,6 @@
--- name: CreateRule :one
-INSERT INTO rules (
+-- name: CreateGameRule :one
+INSERT INTO game_rules (
+  game_id,
   group_id,
   mahjong_type,
   initial_points,
@@ -15,6 +16,7 @@ INSERT INTO rules (
   chip_point
 )
 VALUES (
+  @game_id,
   @group_id,
   @mahjong_type,
   @initial_points,
@@ -31,6 +33,7 @@ VALUES (
 )
 RETURNING
   id,
+  game_id,
   group_id,
   mahjong_type,
   initial_points,
@@ -47,9 +50,10 @@ RETURNING
   created_at,
   updated_at;
 
--- name: GetRuleByGroupID :one
+-- name: GetGameRuleByGameID :one
 SELECT
   id,
+  game_id,
   group_id,
   mahjong_type,
   initial_points,
@@ -66,6 +70,6 @@ SELECT
   created_at,
   updated_at
 FROM
-  rules
+  game_rules
 WHERE
-  group_id = @group_id;
+  game_id = @game_id;

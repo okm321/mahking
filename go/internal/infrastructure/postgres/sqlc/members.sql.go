@@ -5,7 +5,52 @@
 
 package sqlc
 
+import (
+	"context"
+)
+
 type CreateMembersParams struct {
 	GroupID int64  `json:"group_id"`
 	Name    string `json:"name"`
+}
+
+const listMembersByGroupID = `-- name: ListMembersByGroupID :many
+SELECT
+  id,
+  group_id,
+  name,
+  created_at,
+  updated_at
+FROM
+  members
+WHERE
+  group_id = $1
+ORDER BY
+  id
+`
+
+func (q *Queries) ListMembersByGroupID(ctx context.Context, groupID int64) ([]Member, error) {
+	rows, err := q.db.Query(ctx, listMembersByGroupID, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Member
+	for rows.Next() {
+		var i Member
+		if err := rows.Scan(
+			&i.ID,
+			&i.GroupID,
+			&i.Name,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

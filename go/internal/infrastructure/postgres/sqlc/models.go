@@ -79,7 +79,7 @@ type GameScore struct {
 	// 素点 (100点単位, 例: 32400)
 	RawScore int32 `json:"raw_score"`
 	// 計算後のポイント
-	Point pgtype.Numeric `json:"point"`
+	Point float64 `json:"point"`
 	// チップ枚数
 	ChipCount null.Int `json:"chip_count"`
 	// 飛びフラグ

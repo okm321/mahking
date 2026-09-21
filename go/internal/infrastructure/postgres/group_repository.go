@@ -57,10 +57,31 @@ func (r *GroupRepository) GetByUUID(ctx context.Context, uid string) (_ *domain.
 		return nil, pkgerror.Wrap(err, "get group by uid")
 	}
 
+	members, err := q.ListMembersByGroupID(ctx, row.ID)
+	if err != nil {
+		return nil, pkgerror.Wrap(err, "list members by group id")
+	}
+
+	rule, err := q.GetRuleByGroupID(ctx, row.ID)
+	if err != nil {
+		return nil, pkgerror.Wrap(err, "get rule by group id")
+	}
+
+	dms := make([]*domain.Member, 0, len(members))
+	for _, m := range members {
+		dms = append(dms, &domain.Member{
+			ID:      m.ID,
+			GroupID: m.GroupID,
+			Name:    m.Name,
+		})
+	}
+
 	return &domain.Group{
-		ID:   row.ID,
-		UID:  row.Uid,
-		Name: row.Name,
+		ID:      row.ID,
+		UID:     row.Uid,
+		Name:    row.Name,
+		Members: dms,
+		Rule:    toDomainRule(rule),
 	}, nil
 }
 
@@ -125,3 +146,22 @@ func (r *GroupRepository) createRelatedInfo(ctx context.Context, group *domain.G
 }
 
 var _ domain.GroupRepository = (*GroupRepository)(nil)
+
+func toDomainRule(r sqlc.Rule) *domain.Rule {
+	return &domain.Rule{
+		ID:                    r.ID,
+		GroupID:               r.GroupID,
+		MahjongType:           domain.MahjongType(r.MahjongType),
+		InitialPoints:         int(r.InitialPoints),
+		ReturnPoints:          int(r.ReturnPoints),
+		RankingPointsFirst:    int(r.RankingPointsFirst),
+		RankingPointsSecond:   int(r.RankingPointsSecond),
+		RankingPointsThird:    int(r.RankingPointsThird),
+		RankingPointsFour:     r.RankingPointsFourth,
+		FractionalCalculation: domain.FractionalCalculation(r.FractionalCalculation),
+		UseBust:               r.UseBust,
+		BustPoint:             r.BustPoint,
+		UseChip:               r.UseChip,
+		ChipPoint:             r.ChipPoint,
+	}
+}

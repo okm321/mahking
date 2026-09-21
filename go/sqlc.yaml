@@ -28,6 +28,8 @@ sql:
             nullable: true
           - db_type: "uuid"
             go_type: "string"
+          - db_type: "pg_catalog.numeric"
+            go_type: "float64"
 plugins: []
 rules: []
 options: {}

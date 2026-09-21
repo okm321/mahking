@@ -9,6 +9,46 @@ import (
 	"context"
 )
 
+// iteratorForCreateGameScores implements pgx.CopyFromSource.
+type iteratorForCreateGameScores struct {
+	rows                 []CreateGameScoresParams
+	skippedFirstNextCall bool
+}
+
+func (r *iteratorForCreateGameScores) Next() bool {
+	if len(r.rows) == 0 {
+		return false
+	}
+	if !r.skippedFirstNextCall {
+		r.skippedFirstNextCall = true
+		return true
+	}
+	r.rows = r.rows[1:]
+	return len(r.rows) > 0
+}
+
+func (r iteratorForCreateGameScores) Values() ([]interface{}, error) {
+	return []interface{}{
+		r.rows[0].GameID,
+		r.rows[0].GroupID,
+		r.rows[0].MemberID,
+		r.rows[0].Seat,
+		r.rows[0].Ranking,
+		r.rows[0].RawScore,
+		r.rows[0].Point,
+		r.rows[0].ChipCount,
+		r.rows[0].IsBusted,
+	}, nil
+}
+
+func (r iteratorForCreateGameScores) Err() error {
+	return nil
+}
+
+func (q *Queries) CreateGameScores(ctx context.Context, arg []CreateGameScoresParams) (int64, error) {
+	return q.db.CopyFrom(ctx, []string{"game_scores"}, []string{"game_id", "group_id", "member_id", "seat", "ranking", "raw_score", "point", "chip_count", "is_busted"}, &iteratorForCreateGameScores{rows: arg})
+}
+
 // iteratorForCreateMembers implements pgx.CopyFromSource.
 type iteratorForCreateMembers struct {
 	rows                 []CreateMembersParams
