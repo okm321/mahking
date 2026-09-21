@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help schema-export proxy db-password db-connect migrate-status migrate-apply migrate-diff local-migrate-diff local-migrate-apply local-migrate-status local-migrate-hash
+.PHONY: help schema-export proxy db-password db-connect migrate-status migrate-apply migrate-diff local-migrate-new local-migrate-apply local-migrate-status local-migrate-hash
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -24,10 +24,10 @@ schema-export: ## 現在のDBから mahking_local スキーマを抽出して go
 	@mkdir -p $(INITDB_DIR)
 	@echo "Exporting schema '$(SCHEMA_NAME)' from $(POSTGRES_CONTAINER)";
 	docker exec $(POSTGRES_CONTAINER) pg_dump -U postgres -d $(POSTGRES_DB) -n $(SCHEMA_NAME) -s > $(INITDB_DIR)/$(SCHEMA_FILE)
-	sed -i '' '/^SECURITY LABEL FOR anon /d' $(INITDB_DIR)/$(SCHEMA_FILE)
-	sed -i '' "s/$(SCHEMA_NAME)\.//g" $(INITDB_DIR)/$(SCHEMA_FILE)
+	perl -ni -e 'print unless /^SECURITY LABEL FOR anon |^\\(un)?restrict /' $(INITDB_DIR)/$(SCHEMA_FILE)
+	perl -pi -e "s/$(SCHEMA_NAME)\\.//g" $(INITDB_DIR)/$(SCHEMA_FILE)
 	awk '/CREATE SCHEMA $(SCHEMA_NAME);/ {print; print "SET search_path TO $(SCHEMA_NAME);"; next} 1' $(INITDB_DIR)/$(SCHEMA_FILE) > $(INITDB_DIR)/.tmp_schema && mv $(INITDB_DIR)/.tmp_schema $(INITDB_DIR)/$(SCHEMA_FILE)
-	sed -i '' 's/CREATE SCHEMA $(SCHEMA_NAME);/CREATE SCHEMA IF NOT EXISTS $(SCHEMA_NAME);/g' $(INITDB_DIR)/$(SCHEMA_FILE)
+	perl -pi -e 's/CREATE SCHEMA $(SCHEMA_NAME);/CREATE SCHEMA IF NOT EXISTS $(SCHEMA_NAME);/g' $(INITDB_DIR)/$(SCHEMA_FILE)
 
 proxy:          ## Cloud SQL Auth Proxy を起動（別ターミナルで実行）
 	cloud-sql-proxy $(CONNECTION_NAME) \
@@ -59,8 +59,8 @@ migrate-diff:   ## スキーマ差分からマイグレーションファイル�
 
 # ─── ローカル用 Atlas コマンド ───
 
-local-migrate-diff:   ## [local] スキーマ差分からマイグレーションファイルを生成
-	@atlas migrate diff --env local
+local-migrate-new:    ## [local] マイグレーションファイルの雛形を作成 (name=xxx)
+	@atlas migrate new $(name) --env local
 
 local-migrate-apply:  ## [local] マイグレーションを適用
 	@atlas migrate apply --env local
