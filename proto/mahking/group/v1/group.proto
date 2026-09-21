@@ -12,6 +12,13 @@ message Group {
   int64 id = 1;
   string uid = 2;
   string name = 3;
+  repeated Member members = 4;
+  Rules rules = 5;
+}
+
+message Member {
+  int64 id = 1;
+  string name = 2;
 }
 
 enum MahjongType {

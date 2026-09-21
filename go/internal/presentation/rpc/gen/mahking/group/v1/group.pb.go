@@ -183,6 +183,8 @@ type Group struct {
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Uid           string                 `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Members       []*Member              `protobuf:"bytes,4,rep,name=members,proto3" json:"members,omitempty"`
+	Rules         *Rules                 `protobuf:"bytes,5,opt,name=rules,proto3" json:"rules,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -238,6 +240,72 @@ func (x *Group) GetName() string {
 	return ""
 }
 
+func (x *Group) GetMembers() []*Member {
+	if x != nil {
+		return x.Members
+	}
+	return nil
+}
+
+func (x *Group) GetRules() *Rules {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
+type Member struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Member) Reset() {
+	*x = Member{}
+	mi := &file_mahking_group_v1_group_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Member) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Member) ProtoMessage() {}
+
+func (x *Member) ProtoReflect() protoreflect.Message {
+	mi := &file_mahking_group_v1_group_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Member.ProtoReflect.Descriptor instead.
+func (*Member) Descriptor() ([]byte, []int) {
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Member) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Member) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 type Rules struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	MahjongType           MahjongType            `protobuf:"varint,1,opt,name=mahjong_type,json=mahjongType,proto3,enum=mahking.group.v1.MahjongType" json:"mahjong_type,omitempty"`
@@ -258,7 +326,7 @@ type Rules struct {
 
 func (x *Rules) Reset() {
 	*x = Rules{}
-	mi := &file_mahking_group_v1_group_proto_msgTypes[1]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -270,7 +338,7 @@ func (x *Rules) String() string {
 func (*Rules) ProtoMessage() {}
 
 func (x *Rules) ProtoReflect() protoreflect.Message {
-	mi := &file_mahking_group_v1_group_proto_msgTypes[1]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +351,7 @@ func (x *Rules) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Rules.ProtoReflect.Descriptor instead.
 func (*Rules) Descriptor() ([]byte, []int) {
-	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{1}
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Rules) GetMahjongType() MahjongType {
@@ -379,7 +447,7 @@ type GetGroupRequest struct {
 
 func (x *GetGroupRequest) Reset() {
 	*x = GetGroupRequest{}
-	mi := &file_mahking_group_v1_group_proto_msgTypes[2]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -391,7 +459,7 @@ func (x *GetGroupRequest) String() string {
 func (*GetGroupRequest) ProtoMessage() {}
 
 func (x *GetGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_mahking_group_v1_group_proto_msgTypes[2]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -404,7 +472,7 @@ func (x *GetGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGroupRequest.ProtoReflect.Descriptor instead.
 func (*GetGroupRequest) Descriptor() ([]byte, []int) {
-	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{2}
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetGroupRequest) GetUid() string {
@@ -423,7 +491,7 @@ type GetGroupResponse struct {
 
 func (x *GetGroupResponse) Reset() {
 	*x = GetGroupResponse{}
-	mi := &file_mahking_group_v1_group_proto_msgTypes[3]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -435,7 +503,7 @@ func (x *GetGroupResponse) String() string {
 func (*GetGroupResponse) ProtoMessage() {}
 
 func (x *GetGroupResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_mahking_group_v1_group_proto_msgTypes[3]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -448,7 +516,7 @@ func (x *GetGroupResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetGroupResponse.ProtoReflect.Descriptor instead.
 func (*GetGroupResponse) Descriptor() ([]byte, []int) {
-	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{3}
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetGroupResponse) GetGroup() *Group {
@@ -467,7 +535,7 @@ type ListGroupsResponse struct {
 
 func (x *ListGroupsResponse) Reset() {
 	*x = ListGroupsResponse{}
-	mi := &file_mahking_group_v1_group_proto_msgTypes[4]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -479,7 +547,7 @@ func (x *ListGroupsResponse) String() string {
 func (*ListGroupsResponse) ProtoMessage() {}
 
 func (x *ListGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_mahking_group_v1_group_proto_msgTypes[4]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -492,7 +560,7 @@ func (x *ListGroupsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupsResponse.ProtoReflect.Descriptor instead.
 func (*ListGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{4}
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListGroupsResponse) GetGroups() []*Group {
@@ -513,7 +581,7 @@ type CreateGroupRequest struct {
 
 func (x *CreateGroupRequest) Reset() {
 	*x = CreateGroupRequest{}
-	mi := &file_mahking_group_v1_group_proto_msgTypes[5]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -525,7 +593,7 @@ func (x *CreateGroupRequest) String() string {
 func (*CreateGroupRequest) ProtoMessage() {}
 
 func (x *CreateGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_mahking_group_v1_group_proto_msgTypes[5]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -538,7 +606,7 @@ func (x *CreateGroupRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateGroupRequest.ProtoReflect.Descriptor instead.
 func (*CreateGroupRequest) Descriptor() ([]byte, []int) {
-	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{5}
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CreateGroupRequest) GetName() string {
@@ -571,7 +639,7 @@ type CreateGroupResponse struct {
 
 func (x *CreateGroupResponse) Reset() {
 	*x = CreateGroupResponse{}
-	mi := &file_mahking_group_v1_group_proto_msgTypes[6]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -583,7 +651,7 @@ func (x *CreateGroupResponse) String() string {
 func (*CreateGroupResponse) ProtoMessage() {}
 
 func (x *CreateGroupResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_mahking_group_v1_group_proto_msgTypes[6]
+	mi := &file_mahking_group_v1_group_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -596,7 +664,7 @@ func (x *CreateGroupResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateGroupResponse.ProtoReflect.Descriptor instead.
 func (*CreateGroupResponse) Descriptor() ([]byte, []int) {
-	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{6}
+	return file_mahking_group_v1_group_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateGroupResponse) GetGroup() *Group {
@@ -610,11 +678,16 @@ var File_mahking_group_v1_group_proto protoreflect.FileDescriptor
 
 const file_mahking_group_v1_group_proto_rawDesc = "" +
 	"\n" +
-	"\x1cmahking/group/v1/group.proto\x12\x10mahking.group.v1\x1a\x1bbuf/validate/validate.proto\"=\n" +
+	"\x1cmahking/group/v1/group.proto\x12\x10mahking.group.v1\x1a\x1bbuf/validate/validate.proto\"\xa0\x01\n" +
 	"\x05Group\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
 	"\x03uid\x18\x02 \x01(\tR\x03uid\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\"\xa0\x05\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x122\n" +
+	"\amembers\x18\x04 \x03(\v2\x18.mahking.group.v1.MemberR\amembers\x12-\n" +
+	"\x05rules\x18\x05 \x01(\v2\x17.mahking.group.v1.RulesR\x05rules\",\n" +
+	"\x06Member\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\xa0\x05\n" +
 	"\x05Rules\x12L\n" +
 	"\fmahjong_type\x18\x01 \x01(\x0e2\x1d.mahking.group.v1.MahjongTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\vmahjongType\x12.\n" +
@@ -684,35 +757,38 @@ func file_mahking_group_v1_group_proto_rawDescGZIP() []byte {
 }
 
 var file_mahking_group_v1_group_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_mahking_group_v1_group_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_mahking_group_v1_group_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_mahking_group_v1_group_proto_goTypes = []any{
 	(MahjongType)(0),            // 0: mahking.group.v1.MahjongType
 	(FractionalCalculation)(0),  // 1: mahking.group.v1.FractionalCalculation
 	(FractionalRecipient)(0),    // 2: mahking.group.v1.FractionalRecipient
 	(*Group)(nil),               // 3: mahking.group.v1.Group
-	(*Rules)(nil),               // 4: mahking.group.v1.Rules
-	(*GetGroupRequest)(nil),     // 5: mahking.group.v1.GetGroupRequest
-	(*GetGroupResponse)(nil),    // 6: mahking.group.v1.GetGroupResponse
-	(*ListGroupsResponse)(nil),  // 7: mahking.group.v1.ListGroupsResponse
-	(*CreateGroupRequest)(nil),  // 8: mahking.group.v1.CreateGroupRequest
-	(*CreateGroupResponse)(nil), // 9: mahking.group.v1.CreateGroupResponse
+	(*Member)(nil),              // 4: mahking.group.v1.Member
+	(*Rules)(nil),               // 5: mahking.group.v1.Rules
+	(*GetGroupRequest)(nil),     // 6: mahking.group.v1.GetGroupRequest
+	(*GetGroupResponse)(nil),    // 7: mahking.group.v1.GetGroupResponse
+	(*ListGroupsResponse)(nil),  // 8: mahking.group.v1.ListGroupsResponse
+	(*CreateGroupRequest)(nil),  // 9: mahking.group.v1.CreateGroupRequest
+	(*CreateGroupResponse)(nil), // 10: mahking.group.v1.CreateGroupResponse
 }
 var file_mahking_group_v1_group_proto_depIdxs = []int32{
-	0, // 0: mahking.group.v1.Rules.mahjong_type:type_name -> mahking.group.v1.MahjongType
-	1, // 1: mahking.group.v1.Rules.fractional_calculation:type_name -> mahking.group.v1.FractionalCalculation
-	3, // 2: mahking.group.v1.GetGroupResponse.group:type_name -> mahking.group.v1.Group
-	3, // 3: mahking.group.v1.ListGroupsResponse.groups:type_name -> mahking.group.v1.Group
-	4, // 4: mahking.group.v1.CreateGroupRequest.rules:type_name -> mahking.group.v1.Rules
-	3, // 5: mahking.group.v1.CreateGroupResponse.group:type_name -> mahking.group.v1.Group
-	5, // 6: mahking.group.v1.GroupService.GetGroup:input_type -> mahking.group.v1.GetGroupRequest
-	8, // 7: mahking.group.v1.GroupService.CreateGroup:input_type -> mahking.group.v1.CreateGroupRequest
-	6, // 8: mahking.group.v1.GroupService.GetGroup:output_type -> mahking.group.v1.GetGroupResponse
-	9, // 9: mahking.group.v1.GroupService.CreateGroup:output_type -> mahking.group.v1.CreateGroupResponse
-	8, // [8:10] is the sub-list for method output_type
-	6, // [6:8] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	4,  // 0: mahking.group.v1.Group.members:type_name -> mahking.group.v1.Member
+	5,  // 1: mahking.group.v1.Group.rules:type_name -> mahking.group.v1.Rules
+	0,  // 2: mahking.group.v1.Rules.mahjong_type:type_name -> mahking.group.v1.MahjongType
+	1,  // 3: mahking.group.v1.Rules.fractional_calculation:type_name -> mahking.group.v1.FractionalCalculation
+	3,  // 4: mahking.group.v1.GetGroupResponse.group:type_name -> mahking.group.v1.Group
+	3,  // 5: mahking.group.v1.ListGroupsResponse.groups:type_name -> mahking.group.v1.Group
+	5,  // 6: mahking.group.v1.CreateGroupRequest.rules:type_name -> mahking.group.v1.Rules
+	3,  // 7: mahking.group.v1.CreateGroupResponse.group:type_name -> mahking.group.v1.Group
+	6,  // 8: mahking.group.v1.GroupService.GetGroup:input_type -> mahking.group.v1.GetGroupRequest
+	9,  // 9: mahking.group.v1.GroupService.CreateGroup:input_type -> mahking.group.v1.CreateGroupRequest
+	7,  // 10: mahking.group.v1.GroupService.GetGroup:output_type -> mahking.group.v1.GetGroupResponse
+	10, // 11: mahking.group.v1.GroupService.CreateGroup:output_type -> mahking.group.v1.CreateGroupResponse
+	10, // [10:12] is the sub-list for method output_type
+	8,  // [8:10] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_mahking_group_v1_group_proto_init() }
@@ -720,14 +796,14 @@ func file_mahking_group_v1_group_proto_init() {
 	if File_mahking_group_v1_group_proto != nil {
 		return
 	}
-	file_mahking_group_v1_group_proto_msgTypes[1].OneofWrappers = []any{}
+	file_mahking_group_v1_group_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_mahking_group_v1_group_proto_rawDesc), len(file_mahking_group_v1_group_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

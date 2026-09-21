@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package mahking.game.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "mahking/group/v1/group.proto";
+
+service GameService {
+  rpc CreateGame(CreateGameRequest) returns (CreateGameResponse);
+  rpc ListGames(ListGamesRequest) returns (ListGamesResponse);
+}
+
+enum Seat {
+  SEAT_UNSPECIFIED = 0;
+  SEAT_EAST = 1; // 東
+  SEAT_SOUTH = 2; // 南
+  SEAT_WEST = 3; // 西
+  SEAT_NORTH = 4; // 北
+}
+
+message Game {
+  int64 id = 1;
+  int64 group_id = 2;
+  string note = 3;
+  google.protobuf.Timestamp played_at = 4;
+  mahking.group.v1.Rules rules = 5; // 対局時点のルールスナップショット
+  repeated GameScore scores = 6;
+}
+
+message GameScore {
+  int64 id = 1;
+  int64 member_id = 2;
+  Seat seat = 3;
+  int32 ranking = 4;
+  int32 raw_score = 5; // 素点（100点単位。324 = 32,400点）
+  double point = 6; // サーバーが計算したポイント
+  optional int32 chip_count = 7;
+  bool is_busted = 8;
+}
+
+message CreateGameRequest {
+  string group_uid = 1 [(buf.validate.field).string.uuid = true];
+  string note = 2 [(buf.validate.field).string.max_len = 200];
+  google.protobuf.Timestamp played_at = 3; // 省略時はサーバーの現在時刻
+  repeated GameScoreInput scores = 4 [(buf.validate.field).repeated = {
+    min_items: 3
+    max_items: 4
+  }];
+}
+
+message GameScoreInput {
+  int64 member_id = 1 [(buf.validate.field).int64.gt = 0];
+  Seat seat = 2 [(buf.validate.field).enum = {
+    defined_only: true
+    not_in: [0]
+  }];
+  int32 ranking = 3 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 4
+  }];
+  int32 raw_score = 4;
+  optional int32 chip_count = 5;
+  bool is_busted = 6;
+}
+
+message CreateGameResponse {
+  Game game = 1;
+}
+
+message ListGamesRequest {
+  string group_uid = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message ListGamesResponse {
+  repeated Game games = 1;
+}

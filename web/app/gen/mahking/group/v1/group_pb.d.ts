@@ -28,6 +28,16 @@ export declare type Group = Message<"mahking.group.v1.Group"> & {
    * @generated from field: string name = 3;
    */
   name: string;
+
+  /**
+   * @generated from field: repeated mahking.group.v1.Member members = 4;
+   */
+  members: Member[];
+
+  /**
+   * @generated from field: mahking.group.v1.Rules rules = 5;
+   */
+  rules?: Rules | undefined;
 };
 
 /**
@@ -35,6 +45,27 @@ export declare type Group = Message<"mahking.group.v1.Group"> & {
  * Use `create(GroupSchema)` to create a new message.
  */
 export declare const GroupSchema: GenMessage<Group>;
+
+/**
+ * @generated from message mahking.group.v1.Member
+ */
+export declare type Member = Message<"mahking.group.v1.Member"> & {
+  /**
+   * @generated from field: int64 id = 1;
+   */
+  id: bigint;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message mahking.group.v1.Member.
+ * Use `create(MemberSchema)` to create a new message.
+ */
+export declare const MemberSchema: GenMessage<Member>;
 
 /**
  * @generated from message mahking.group.v1.Rules
