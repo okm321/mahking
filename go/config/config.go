@@ -25,12 +25,13 @@ type Telemetry struct {
 
 // Server configurations.
 type Server struct {
-	Address         string        `env:"ADDRESS" envDefault:""`
-	Port            string        `env:"PORT" envDefault:"8080"`
-	ReadTimeout     time.Duration `env:"READ_TIMEOUT"`
-	WriteTimeout    time.Duration `env:"WRITE_TIMEOUT"`
-	IdleTimeout     time.Duration `env:"IDLE_TIMEOUT"`
-	ShutdownTimeout time.Duration `env:"SHUTDOWN_TIMEOUT"`
+	Address            string        `env:"ADDRESS" envDefault:""`
+	Port               string        `env:"PORT" envDefault:"8080"`
+	ReadTimeout        time.Duration `env:"READ_TIMEOUT"`
+	WriteTimeout       time.Duration `env:"WRITE_TIMEOUT"`
+	IdleTimeout        time.Duration `env:"IDLE_TIMEOUT"`
+	ShutdownTimeout    time.Duration `env:"SHUTDOWN_TIMEOUT"`
+	CORSAllowedOrigins []string      `env:"CORS_ALLOWED_ORIGINS" envSeparator:"," envDefault:"http://localhost:3000"`
 }
 
 var (

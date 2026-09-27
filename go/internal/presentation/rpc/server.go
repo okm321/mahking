@@ -22,7 +22,7 @@ type ServerSet struct {
 	Game  *GameServer
 }
 
-func NewHandler(servers ServerSet) http.Handler {
+func NewHandler(cfg *config.Config, servers ServerSet) http.Handler {
 	mux := http.NewServeMux()
 	interceptors := connect.WithInterceptors(errorInterceptor(), validate.NewInterceptor())
 
@@ -32,7 +32,7 @@ func NewHandler(servers ServerSet) http.Handler {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	return traceContextMiddleware(accessLogMiddleware(mux))
+	return corsMiddleware(cfg.Server.CORSAllowedOrigins)(traceContextMiddleware(accessLogMiddleware(mux)))
 }
 
 func Run(cfg *config.Config, handler http.Handler) error {

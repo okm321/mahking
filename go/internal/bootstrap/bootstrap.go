@@ -45,7 +45,7 @@ func NewApp(ctx context.Context, cfg *config.Config) (*App, error) {
 	})
 
 	// Handler
-	handler := rpc.NewHandler(rpc.ServerSet{
+	handler := rpc.NewHandler(cfg, rpc.ServerSet{
 		Group: rpc.NewGroupServer(groupUsecase),
 		Game:  rpc.NewGameServer(gameUsecase),
 	})
