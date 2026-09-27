@@ -21,6 +21,7 @@ func toCreateGroupInput(req *groupv1.CreateGroupRequest) in.CreateGroupWithRule 
 			RankingPointsSecond:   int(rules.GetRankingPointsSecond()),
 			RankingPointsThird:    int(rules.GetRankingPointsThird()),
 			FractionalCalculation: domain.FractionalCalculation(rules.GetFractionalCalculation()),
+			FractionalRecipient:   domain.FractionalRecipient(rules.GetFractionalRecipient()),
 			UseBust:               rules.GetUseBust(),
 			UseChip:               rules.GetUseChip(),
 		},
@@ -58,6 +59,7 @@ func toProtoRules(r out.Rule) *groupv1.Rules {
 		RankingPointsThird:    int32(r.RankingPointsThird),        //nolint:gosec // 点数はint32範囲内
 		RankingPointsFour:     int32PtrFromNull(r.RankingPointsFour),
 		FractionalCalculation: groupv1.FractionalCalculation(r.FractionalCalculation), //nolint:gosec // 計算方法は1-5の範囲
+		FractionalRecipient:   groupv1.FractionalRecipient(r.FractionalRecipient),     //nolint:gosec // 端数を受け取る人は1-2の範囲
 		UseBust:               r.UseBust,
 		BustPoint:             int32PtrFromNull(r.BustPoint),
 		UseChip:               r.UseChip,

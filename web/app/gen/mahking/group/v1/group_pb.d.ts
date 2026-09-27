@@ -130,6 +130,11 @@ export declare type Rules = Message<"mahking.group.v1.Rules"> & {
    * @generated from field: optional int32 chip_point = 12;
    */
   chipPoint?: number | undefined;
+
+  /**
+   * @generated from field: mahking.group.v1.FractionalRecipient fractional_recipient = 13;
+   */
+  fractionalRecipient: FractionalRecipient;
 };
 
 /**

@@ -61,6 +61,7 @@ message Rules {
   optional int32 bust_point = 10;
   bool use_chip = 11;
   optional int32 chip_point = 12;
+  FractionalRecipient fractional_recipient = 13 [(buf.validate.field).enum.defined_only = true];
 }
 
 message GetGroupRequest {

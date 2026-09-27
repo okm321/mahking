@@ -82,6 +82,7 @@ func (u *GroupUsecase) Create(ctx context.Context, in appin.CreateGroupWithRule)
 		RankingPointsThird:    in.Rules.RankingPointsThird,
 		RankingPointsFour:     in.Rules.RankingPointsFour,
 		FractionalCalculation: in.Rules.FractionalCalculation,
+		FractionalRecipient:   in.Rules.FractionalRecipient,
 		UseBust:               in.Rules.UseBust,
 		BustPoint:             in.Rules.BustPoint,
 		UseChip:               in.Rules.UseChip,

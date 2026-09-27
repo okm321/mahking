@@ -320,6 +320,7 @@ type Rules struct {
 	BustPoint             *int32                 `protobuf:"varint,10,opt,name=bust_point,json=bustPoint,proto3,oneof" json:"bust_point,omitempty"`
 	UseChip               bool                   `protobuf:"varint,11,opt,name=use_chip,json=useChip,proto3" json:"use_chip,omitempty"`
 	ChipPoint             *int32                 `protobuf:"varint,12,opt,name=chip_point,json=chipPoint,proto3,oneof" json:"chip_point,omitempty"`
+	FractionalRecipient   FractionalRecipient    `protobuf:"varint,13,opt,name=fractional_recipient,json=fractionalRecipient,proto3,enum=mahking.group.v1.FractionalRecipient" json:"fractional_recipient,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -436,6 +437,13 @@ func (x *Rules) GetChipPoint() int32 {
 		return *x.ChipPoint
 	}
 	return 0
+}
+
+func (x *Rules) GetFractionalRecipient() FractionalRecipient {
+	if x != nil {
+		return x.FractionalRecipient
+	}
+	return FractionalRecipient_FRACTIONAL_RECIPIENT_UNSPECIFIED
 }
 
 type GetGroupRequest struct {
@@ -687,7 +695,7 @@ const file_mahking_group_v1_group_proto_rawDesc = "" +
 	"\x05rules\x18\x05 \x01(\v2\x17.mahking.group.v1.RulesR\x05rules\",\n" +
 	"\x06Member\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"\xa0\x05\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"\x84\x06\n" +
 	"\x05Rules\x12L\n" +
 	"\fmahjong_type\x18\x01 \x01(\x0e2\x1d.mahking.group.v1.MahjongTypeB\n" +
 	"\xbaH\a\x82\x01\x04\x10\x01 \x00R\vmahjongType\x12.\n" +
@@ -705,7 +713,8 @@ const file_mahking_group_v1_group_proto_rawDesc = "" +
 	" \x01(\x05H\x01R\tbustPoint\x88\x01\x01\x12\x19\n" +
 	"\buse_chip\x18\v \x01(\bR\auseChip\x12\"\n" +
 	"\n" +
-	"chip_point\x18\f \x01(\x05H\x02R\tchipPoint\x88\x01\x01B\x16\n" +
+	"chip_point\x18\f \x01(\x05H\x02R\tchipPoint\x88\x01\x01\x12b\n" +
+	"\x14fractional_recipient\x18\r \x01(\x0e2%.mahking.group.v1.FractionalRecipientB\b\xbaH\x05\x82\x01\x02\x10\x01R\x13fractionalRecipientB\x16\n" +
 	"\x14_ranking_points_fourB\r\n" +
 	"\v_bust_pointB\r\n" +
 	"\v_chip_point\"#\n" +
@@ -776,19 +785,20 @@ var file_mahking_group_v1_group_proto_depIdxs = []int32{
 	5,  // 1: mahking.group.v1.Group.rules:type_name -> mahking.group.v1.Rules
 	0,  // 2: mahking.group.v1.Rules.mahjong_type:type_name -> mahking.group.v1.MahjongType
 	1,  // 3: mahking.group.v1.Rules.fractional_calculation:type_name -> mahking.group.v1.FractionalCalculation
-	3,  // 4: mahking.group.v1.GetGroupResponse.group:type_name -> mahking.group.v1.Group
-	3,  // 5: mahking.group.v1.ListGroupsResponse.groups:type_name -> mahking.group.v1.Group
-	5,  // 6: mahking.group.v1.CreateGroupRequest.rules:type_name -> mahking.group.v1.Rules
-	3,  // 7: mahking.group.v1.CreateGroupResponse.group:type_name -> mahking.group.v1.Group
-	6,  // 8: mahking.group.v1.GroupService.GetGroup:input_type -> mahking.group.v1.GetGroupRequest
-	9,  // 9: mahking.group.v1.GroupService.CreateGroup:input_type -> mahking.group.v1.CreateGroupRequest
-	7,  // 10: mahking.group.v1.GroupService.GetGroup:output_type -> mahking.group.v1.GetGroupResponse
-	10, // 11: mahking.group.v1.GroupService.CreateGroup:output_type -> mahking.group.v1.CreateGroupResponse
-	10, // [10:12] is the sub-list for method output_type
-	8,  // [8:10] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	2,  // 4: mahking.group.v1.Rules.fractional_recipient:type_name -> mahking.group.v1.FractionalRecipient
+	3,  // 5: mahking.group.v1.GetGroupResponse.group:type_name -> mahking.group.v1.Group
+	3,  // 6: mahking.group.v1.ListGroupsResponse.groups:type_name -> mahking.group.v1.Group
+	5,  // 7: mahking.group.v1.CreateGroupRequest.rules:type_name -> mahking.group.v1.Rules
+	3,  // 8: mahking.group.v1.CreateGroupResponse.group:type_name -> mahking.group.v1.Group
+	6,  // 9: mahking.group.v1.GroupService.GetGroup:input_type -> mahking.group.v1.GetGroupRequest
+	9,  // 10: mahking.group.v1.GroupService.CreateGroup:input_type -> mahking.group.v1.CreateGroupRequest
+	7,  // 11: mahking.group.v1.GroupService.GetGroup:output_type -> mahking.group.v1.GetGroupResponse
+	10, // 12: mahking.group.v1.GroupService.CreateGroup:output_type -> mahking.group.v1.CreateGroupResponse
+	11, // [11:13] is the sub-list for method output_type
+	9,  // [9:11] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_mahking_group_v1_group_proto_init() }

@@ -20,6 +20,7 @@ type Rules struct {
 	RankingPointsThird    int                          // 三位のウマ
 	RankingPointsFour     null.Int                     // 四位のウマ
 	FractionalCalculation domain.FractionalCalculation // 1: 切り上げ, 2: 切り捨て, 3: 四捨五入, 4: 10点未満切り上げ, 5: 10点未満切り捨て
+	FractionalRecipient   domain.FractionalRecipient   // 端数を受け取る人
 	UseBust               bool                         // 飛び設定
 	BustPoint             null.Int                     // 飛び賞のポイント
 	UseChip               bool                         // チップ設定

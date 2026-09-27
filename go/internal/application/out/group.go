@@ -28,6 +28,7 @@ type Rule struct {
 	RankingPointsThird    int
 	RankingPointsFour     null.Int
 	FractionalCalculation domain.FractionalCalculation
+	FractionalRecipient   domain.FractionalRecipient
 	UseBust               bool
 	BustPoint             null.Int
 	UseChip               bool
@@ -61,6 +62,7 @@ func NewRule(r domain.Rule) Rule {
 		RankingPointsThird:    r.RankingPointsThird,
 		RankingPointsFour:     r.RankingPointsFour,
 		FractionalCalculation: r.FractionalCalculation,
+		FractionalRecipient:   r.FractionalRecipient,
 		UseBust:               r.UseBust,
 		BustPoint:             r.BustPoint,
 		UseChip:               r.UseChip,
