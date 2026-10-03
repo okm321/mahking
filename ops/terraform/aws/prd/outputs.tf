@@ -46,3 +46,18 @@ output "certificate_arn" {
   description = "api.mahking.appのACM証明書ARN"
   value       = module.acm.certificate_arn
 }
+
+output "alb_dns_name" {
+  description = "ALBのDNS名"
+  value       = module.alb.alb_dns_name
+}
+
+output "ecs_cluster_name" {
+  description = "ECSクラスター名"
+  value       = module.ecs.cluster_name
+}
+
+output "ecs_service_name" {
+  description = "ECSサービス名"
+  value       = module.ecs.service_name
+}
