@@ -48,6 +48,12 @@ variable "environment" {
   type        = map(string)
 }
 
+variable "secrets" {
+  description = "コンテナに渡す秘密の環境変数（環境変数名 => SSMパラメータのARN）"
+  type        = map(string)
+  default     = {}
+}
+
 variable "desired_count" {
   description = "起動するタスク数"
   type        = number

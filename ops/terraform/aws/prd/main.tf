@@ -44,6 +44,24 @@ module "acm" {
 }
 
 # ==============================================================================
+# Aurora
+# ==============================================================================
+module "aurora" {
+  source = "../modules/aurora"
+
+  cluster_identifier       = local.db_cluster_identifier
+  subnet_ids               = module.vpc.private_subnet_ids
+  security_group_id        = module.security_group.aurora_sg_id
+  engine_version           = local.db_engine_version
+  database_name            = local.db_name
+  master_username          = local.db_master_username
+  min_capacity             = local.db_min_acu
+  max_capacity             = local.db_max_acu
+  seconds_until_auto_pause = local.db_seconds_until_auto_pause
+  password_ssm_name        = local.db_password_ssm_name
+}
+
+# ==============================================================================
 # ALB
 # ==============================================================================
 module "alb" {
@@ -76,6 +94,7 @@ module "ecs" {
   image              = "${module.ecr.repository_url}:${local.image_tag}"
   app_port           = local.app_port
   environment        = local.container_environment
+  secrets            = local.container_secrets
   desired_count      = local.desired_count
   subnet_ids         = module.vpc.public_subnet_ids
   security_group_id  = module.security_group.ecs_sg_id

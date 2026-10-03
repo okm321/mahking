@@ -36,6 +36,26 @@ resource "aws_iam_role_policy_attachment" "execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+# SSMパラメータを環境変数に渡すにはssm:GetParametersが必要（マネージドポリシーには無い）。
+# SecureStringの暗号化が既定のKMSキー（aws/ssm）ならkms:Decryptは不要
+# https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
+data "aws_iam_policy_document" "secrets" {
+  count = length(var.secrets) > 0 ? 1 : 0
+
+  statement {
+    actions   = ["ssm:GetParameters"]
+    resources = values(var.secrets)
+  }
+}
+
+resource "aws_iam_role_policy" "secrets" {
+  count = length(var.secrets) > 0 ? 1 : 0
+
+  name   = "${var.task_family}-secrets"
+  role   = aws_iam_role.execution.id
+  policy = data.aws_iam_policy_document.secrets[0].json
+}
+
 # アプリのコードが使うロール。将来S3等を使うときにここにポリシーを足す
 # （今のGoアプリはAWSのAPIを呼ばないのでポリシーは付けない）
 resource "aws_iam_role" "task" {
@@ -86,6 +106,7 @@ resource "aws_ecs_task_definition" "api" {
       ]
 
       environment = [for k, v in var.environment : { name = k, value = v }]
+      secrets     = [for k, v in var.secrets : { name = k, valueFrom = v }]
 
       logConfiguration = {
         logDriver = "awslogs"

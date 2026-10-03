@@ -61,3 +61,13 @@ output "ecs_service_name" {
   description = "ECSサービス名"
   value       = module.ecs.service_name
 }
+
+output "aurora_endpoint" {
+  description = "Auroraのwriterエンドポイント"
+  value       = module.aurora.cluster_endpoint
+}
+
+output "db_password_ssm_name" {
+  description = "DBパスワードを置いたSSMパラメータ名"
+  value       = module.aurora.password_ssm_parameter_name
+}

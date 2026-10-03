@@ -90,10 +90,45 @@ locals {
   log_group_name     = "/ecs/mahking-${local.env}-api"
   log_retention_days = 30
 
-  # コンテナに渡す環境変数（CORSとDBはAurora作成後に足す）
+  # コンテナに渡す環境変数（CORSは後で足す）
   container_environment = {
     PORT = "8080"
+
+    # go/pkg/postgres/postgres.goが読む接続設定。アプリは起動時には接続しない
+    PG_HOST   = module.aurora.cluster_endpoint
+    PG_PORT   = "5432"
+    PG_USER   = local.db_master_username
+    PG_DBNAME = local.db_name
+    PG_SCHEMA = "public"
+
+    # AuroraはTLSで待ち受けるのでsslmode=require（ローカルはdisable）
+    PG_PARAMS = "sslmode=require timezone=Asia/Tokyo lock_timeout=50000"
   }
+
+  # SSMパラメータから渡す環境変数。中身はタスク起動時にECSが取ってくる
+  container_secrets = {
+    PG_PASS = module.aurora.password_ssm_parameter_arn
+  }
+
+  # ============================================================================
+  # Aurora
+  # ============================================================================
+  db_cluster_identifier = "mahking-${local.env}-aurora"
+
+  # Atlasのマイグレーションはスキーマを作らないので、
+  # クラスター作成時のDBとマスターユーザーをそのまま使う（スキーマはpublic）
+  db_name            = "mahking"
+  db_master_username = "mahking"
+
+  # Aurora PostgreSQL 18系。16.3/15.7/14.12/13.15以降が0 ACU自動停止に対応する
+  db_engine_version = "18.6"
+
+  # min 0で接続が無い間は自動停止する。復帰は15秒程度
+  db_min_acu                  = 0
+  db_max_acu                  = 1
+  db_seconds_until_auto_pause = 300
+
+  db_password_ssm_name = "/mahking/${local.env}/db/password"
 }
 
 variable "cloudflare_api_token" {
