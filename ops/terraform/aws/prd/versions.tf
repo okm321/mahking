@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5.0"
+    }
   }
 
   # tfstateはS3で管理。use_lockfileはTerraform 1.10以降のS3ネイティブロック
@@ -32,4 +36,9 @@ provider "aws" {
       ManagedBy = "terraform"
     }
   }
+}
+
+# mahking.appのDNSはCloudflareにある（Route 53ではない）
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
