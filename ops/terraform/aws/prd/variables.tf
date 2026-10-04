@@ -129,6 +129,12 @@ locals {
   db_seconds_until_auto_pause = 300
 
   db_password_ssm_name = "/mahking/${local.env}/db/password"
+
+  # ============================================================================
+  # Bastion
+  # ============================================================================
+  bastion_name          = "mahking-${local.env}-bastion"
+  bastion_instance_type = "t4g.nano"
 }
 
 variable "cloudflare_api_token" {

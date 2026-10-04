@@ -27,3 +27,13 @@ env "dev" {
     dir = "file://migrations"
   }
 }
+
+env "prd" {
+  src = "file://schema"
+  url = "postgres://mahking:${var.db_password}@localhost:15433/mahking?search_path=public&sslmode=require"
+  dev = "docker://postgres/18/dev?search_path=public"
+
+  migration {
+    dir = "file://migrations"
+  }
+}

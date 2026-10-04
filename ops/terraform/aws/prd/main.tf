@@ -104,3 +104,16 @@ module "ecs" {
   # リスナーが無い状態でサービスを作るとALBへの登録に失敗するのでモジュールごと待つ
   depends_on = [module.alb]
 }
+
+# ==============================================================================
+# Bastion
+# ==============================================================================
+module "bastion" {
+  source = "../modules/bastion"
+
+  name                     = local.bastion_name
+  vpc_id                   = module.vpc.vpc_id
+  subnet_ids               = module.vpc.public_subnet_ids
+  aurora_security_group_id = module.security_group.aurora_sg_id
+  instance_type            = local.bastion_instance_type
+}

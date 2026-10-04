@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help schema-export proxy db-password db-connect migrate-status migrate-apply migrate-diff local-migrate-new local-migrate-apply local-migrate-status local-migrate-hash local-migrate-reset
+.PHONY: help schema-export proxy db-password db-connect migrate-status migrate-apply migrate-diff prd-tunnel prd-tunnel-stop prd-db-password prd-db-connect prd-migrate-status prd-migrate-apply local-migrate-new local-migrate-apply local-migrate-status local-migrate-hash local-migrate-reset
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -56,6 +56,58 @@ migrate-apply:  ## マイグレーションを適用
 migrate-diff:   ## スキーマ差分からマイグレーションファイルを生成
 	@atlas migrate diff --env $(ENV) \
 		--var "db_password=$$($(MAKE) -s db-password)"
+
+# ─── AWS 本番用（SSMトンネル経由）───
+
+AWS_PROFILE  ?= mahking
+AWS_REGION   ?= ap-northeast-1
+AWS_TF_DIR   := ../terraform/aws/prd
+TUNNEL_PORT  := 15433
+PRD_DB_PASSWORD_SSM := /mahking/prd/db/password
+AWS_CLI := aws --profile $(AWS_PROFILE) --region $(AWS_REGION)
+
+prd-tunnel:          ## [prd] bastionを起動してAuroraへのSSMトンネルを張る（別ターミナルで実行。Ctrl-Cで終了すると自動でbastionを停止）
+	@set -eu; \
+	id=$$(terraform -chdir=$(AWS_TF_DIR) output -raw bastion_instance_id); \
+	host=$$(terraform -chdir=$(AWS_TF_DIR) output -raw aurora_endpoint); \
+	trap 'echo; echo "stopping bastion $$id"; $(AWS_CLI) ec2 stop-instances --instance-ids "$$id" --query "StoppingInstances[0].CurrentState.Name" --output text' EXIT; \
+	echo "starting bastion $$id"; \
+	$(AWS_CLI) ec2 start-instances --instance-ids "$$id" >/dev/null; \
+	$(AWS_CLI) ec2 wait instance-running --instance-ids "$$id"; \
+	echo "waiting for SSM agent to come online"; \
+	status=""; \
+	for _ in $$(seq 1 40); do \
+		status=$$($(AWS_CLI) ssm describe-instance-information \
+			--filters "Key=InstanceIds,Values=$$id" \
+			--query 'InstanceInformationList[0].PingStatus' --output text); \
+		if [ "$$status" = "Online" ]; then break; fi; \
+		sleep 3; \
+	done; \
+	if [ "$$status" != "Online" ]; then echo "SSM agent is not Online (last: $$status)" >&2; exit 1; fi; \
+	echo "localhost:$(TUNNEL_PORT) -> $$host:5432"; \
+	$(AWS_CLI) ssm start-session --target "$$id" \
+		--document-name AWS-StartPortForwardingSessionToRemoteHost \
+		--parameters host="$$host",portNumber=5432,localPortNumber=$(TUNNEL_PORT)
+
+prd-tunnel-stop:     ## [prd] bastionを停止する（prd-tunnelが異常終了して止まらなかったとき用）
+	@id=$$(terraform -chdir=$(AWS_TF_DIR) output -raw bastion_instance_id); \
+	$(AWS_CLI) ec2 stop-instances --instance-ids "$$id" \
+		--query 'StoppingInstances[0].CurrentState.Name' --output text
+
+prd-db-password:     ## [prd] SSM Parameter Store から DB パスワードを取得
+	@$(AWS_CLI) ssm get-parameter --name $(PRD_DB_PASSWORD_SSM) \
+		--with-decryption --query Parameter.Value --output text
+
+prd-db-connect:      ## [prd] pgcli で Aurora に接続（prd-tunnel を張った状態で実行）
+	@pgcli "postgres://mahking:$$($(MAKE) -s prd-db-password)@localhost:$(TUNNEL_PORT)/mahking?sslmode=require"
+
+prd-migrate-status:  ## [prd] マイグレーション状態を確認（prd-tunnel を張った状態で実行）
+	@atlas migrate status --env prd \
+		--var "db_password=$$($(MAKE) -s prd-db-password)"
+
+prd-migrate-apply:   ## [prd] マイグレーションを適用（prd-tunnel を張った状態で実行）
+	@atlas migrate apply --env prd \
+		--var "db_password=$$($(MAKE) -s prd-db-password)"
 
 # ─── ローカル用 Atlas コマンド ───
 

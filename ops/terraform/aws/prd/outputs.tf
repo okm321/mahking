@@ -71,3 +71,8 @@ output "db_password_ssm_name" {
   description = "DBパスワードを置いたSSMパラメータ名"
   value       = module.aurora.password_ssm_parameter_name
 }
+
+output "bastion_instance_id" {
+  description = "bastion EC2のインスタンスID"
+  value       = module.bastion.instance_id
+}
